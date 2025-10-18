@@ -1,0 +1,11 @@
+{
+  "name": "okusuri-monorepo",
+  "private": true,
+  "scripts": {
+    "setup": "mise run setup",
+    "dev:backend": "mise run backend:dev",
+    "dev:frontend": "mise run frontend:dev",
+    "dev": "mise run dev",
+    "test": "mise run test"
+  }
+}

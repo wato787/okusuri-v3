@@ -1,0 +1,59 @@
+[tools]
+go = "1.24"
+bun = "latest"
+
+[tasks.backend:deps]
+run = "go mod download"
+cwd = "backend"
+description = "バックエンド依存関係を取得"
+
+[tasks.backend:dev]
+run = "go run ./cmd/server"
+cwd = "backend"
+description = "バックエンドAPIサーバーを起動"
+
+[tasks.backend:test]
+run = "go test ./..."
+cwd = "backend"
+description = "バックエンドのGoテストを実行"
+
+[tasks.frontend:install]
+run = "bun install"
+cwd = "frontend"
+description = "フロントエンド依存関係をインストール"
+
+
+
+
+[tasks.frontend:dev]
+run = "bun run dev"
+cwd = "frontend"
+description = "Next.js開発サーバー"
+
+[tasks.frontend:build]
+run = "bun run build"
+cwd = "frontend"
+description = "Next.jsアプリのビルド"
+
+[tasks.frontend:lint]
+run = "bun run lint"
+cwd = "frontend"
+description = "フロントエンドLint"
+
+[tasks.frontend:lint-fix]
+run = "bun run lint:fix"
+cwd = "frontend"
+description = "フロントエンドLintの自動修正"
+
+[tasks.setup]
+depends = ["backend:deps", "frontend:install"]
+description = "モノレポ環境の初期セットアップ"
+
+[tasks.dev]
+run = "bun run dev:all"
+description = "バックエンドとフロントエンドの開発サーバーを並列起動するユーティリティ"
+
+[tasks.test]
+depends = ["backend:test"]
+description = "全体テスト（現状はバックエンドのみ）"
+

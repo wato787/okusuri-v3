@@ -1,0 +1,6 @@
+[install]
+path = "node_modules"
+cache = true
+
+[test]
+root = "src"

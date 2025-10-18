@@ -1,0 +1,31 @@
+{
+  "name": "okusuri-v3",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {},
+  "workspaceFolder": "/workspaces/okusuri-v3",
+  "postCreateCommand": "mise install",
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "bradlc.vscode-tailwindcss",
+        "csstools.postcss",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "forwardPorts": [3000, 8080],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "Go API",
+      "onAutoForward": "notify"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  workspace:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspaces/okusuri-v3:cached
+      - devcontainer-go-pkg:/go/pkg
+      - devcontainer-bun-cache:/root/.cache/bun
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    user: vscode
+    networks:
+      - devcontainer
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: okusuri
+      POSTGRES_PASSWORD: okusuri
+      POSTGRES_DB: okusuri
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - devcontainer
+
+volumes:
+  devcontainer-go-pkg:
+  devcontainer-bun-cache:
+  postgres-data:
+
+networks:
+  devcontainer:

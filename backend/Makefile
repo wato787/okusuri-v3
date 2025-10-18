@@ -1,6 +1,6 @@
 # Makefile
 
-.PHONY: dev build run test clean install-deps install-air
+.PHONY: dev build run test clean install-deps
 
 # Get Go bin directory path
 GO_BIN := $(shell go env GOPATH)/bin
@@ -12,13 +12,9 @@ all: dev
 install-deps:
 	go mod download
 
-# airをインストール
-install-air:
-	go install github.com/air-verse/air@latest
-
-# 開発モードで実行（ホットリロード）
-dev: install-air
-	$(GO_BIN)/air
+# 開発モードで実行
+dev:
+	go run ./cmd/server
 
 # ビルド
 build:
