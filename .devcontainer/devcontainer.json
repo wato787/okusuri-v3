@@ -3,8 +3,20 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {},
-  "workspaceFolder": "/workspaces/okusuri-v3",
+  "dockerComposeFile": "docker-compose.yml",
+  "shutdownAction": "stopCompose",
+  "features": {
+      "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZshConfig": true
+    }
+  },
+  "workspaceFolder": "/app",
+  "settings": {
+    "dev.containers.dockerCredentialHelper": false
+  },
   "postCreateCommand": ".devcontainer/scripts/setup.sh",
   "remoteUser": "vscode",
   "customizations": {
@@ -13,19 +25,9 @@
         "golang.go",
         "bradlc.vscode-tailwindcss",
         "csstools.postcss",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "biomejs.biome"
       ]
-    }
-  },
-  "forwardPorts": [3000, 8080],
-  "portsAttributes": {
-    "3000": {
-      "label": "Next.js",
-      "onAutoForward": "notify"
-    },
-    "8080": {
-      "label": "Go API",
-      "onAutoForward": "notify"
     }
   }
 }

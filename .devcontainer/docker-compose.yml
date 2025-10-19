@@ -1,14 +1,10 @@
-version: '3.9'
-
 services:
-  workspace:
+  app:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ..:/workspaces/okusuri-v3:cached
-      - devcontainer-go-pkg:/go/pkg
-      - devcontainer-bun-cache:/root/.cache/bun
+      - ..:/app:cached
     command: /bin/sh -c "while sleep 1000; do :; done"
     user: vscode
     networks:
@@ -29,8 +25,6 @@ services:
       - devcontainer
 
 volumes:
-  devcontainer-go-pkg:
-  devcontainer-bun-cache:
   postgres-data:
 
 networks:
