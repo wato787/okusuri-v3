@@ -3,51 +3,46 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
 	"okusuri-backend/internal/dto"
 	"okusuri-backend/internal/model"
 	"okusuri-backend/internal/repository"
 	"okusuri-backend/internal/service"
-	"okusuri-backend/pkg/helper"
-	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type NotificationHandler struct {
 	notificationRepo *repository.NotificationRepository
 	userRepo         *repository.UserRepository
 	notificationSvc  *service.NotificationService
-	medicationRepo   *repository.MedicationRepository
-	medicationSvc    *service.MedicationService
 }
+
+const dummyUserID = "dummy-user" // TODO: 認証実装時に差し替え
 
 func NewNotificationHandler(
 	notificationRepo *repository.NotificationRepository,
 	userRepo *repository.UserRepository,
-	notificationSvc *service.NotificationService,
-	medicationRepo *repository.MedicationRepository,
-	medicationSvc *service.MedicationService,
 ) *NotificationHandler {
 	return &NotificationHandler{
 		notificationRepo: notificationRepo,
 		userRepo:         userRepo,
-		notificationSvc:  notificationSvc,
-		medicationRepo:   medicationRepo,
-		medicationSvc:    medicationSvc,
+		notificationSvc:  service.NewNotificationService(),
 	}
+}
+
+func (h *NotificationHandler) getNotificationService() *service.NotificationService {
+	if h.notificationSvc == nil {
+		h.notificationSvc = service.NewNotificationService()
+	}
+	return h.notificationSvc
 }
 
 // GetSetting は通知設定を取得するハンドラー
 func (h *NotificationHandler) GetSetting(c *gin.Context) {
-	// ユーザーIDを取得
-	userID, err := helper.GetUserIDFromContext(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user ID"})
-		return
-	}
-
 	// 通知設定を取得
-	setting, err := h.notificationRepo.GetSettingByUserID(userID)
+	setting, err := h.notificationRepo.GetSettingByUserID(dummyUserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get notification setting"})
 		return
@@ -58,12 +53,7 @@ func (h *NotificationHandler) GetSetting(c *gin.Context) {
 
 // RegisterSetting は通知設定を登録するハンドラー
 func (h *NotificationHandler) RegisterSetting(c *gin.Context) {
-	// ユーザーIDを取得
-	userID, err := helper.GetUserIDFromContext(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user ID"})
-		return
-	}
+	userID := dummyUserID
 
 	// リクエストボディから通知設定を取得
 	var req dto.RegisterNotificationSettingRequest
@@ -179,32 +169,16 @@ func (h *NotificationHandler) sendUserNotification(
 		return false
 	}
 
-	message := h.getNotificationMessage(user.ID)
-	medicationStatus, statusErr := h.medicationSvc.GetMedicationStatus(user.ID)
-	if statusErr == nil {
-		message = h.generateStatusBasedMessage(medicationStatus)
-	}
+	message := "お薬の時間です。忘れずに服用してください。"
 
-	consecutiveDays := 0
-	if statusErr == nil {
-		consecutiveDays = medicationStatus.CurrentStreak
-	}
-
-	sendErr := h.notificationSvc.SendNotificationWithDays(user, setting, message, consecutiveDays)
+	sendErr := h.getNotificationService().SendNotificationWithDays(user, setting, message, 0)
 	if sendErr != nil {
-		fmt.Printf("エラー: 通知送信失敗: %v\n", sendErr)
+		fmt.Printf("エラー: ユーザーID=%s への通知送信失敗: %v\n", user.ID, sendErr)
 		return false
 	}
 
-	if setting.Subscription != "" {
-		sentSubs[setting.Subscription] = true
-	}
+	sentSubs[setting.Subscription] = true
 	return true
-}
-
-// getNotificationMessage はデフォルトの通知メッセージを取得する
-func (h *NotificationHandler) getNotificationMessage(userID string) string {
-	return "お薬の時間です。忘れずに服用してください。"
 }
 
 // logAndRespond は処理結果をログ出力してレスポンスを返す
@@ -219,23 +193,4 @@ func (h *NotificationHandler) logAndRespond(c *gin.Context, requestTime time.Tim
 	})
 	fmt.Printf("========== 通知送信処理終了 [%s] ==========\n\n",
 		time.Now().Format("2006-01-02 15:04:05"))
-}
-
-// generateStatusBasedMessage はユーザーの薬のステータスに応じた通知メッセージを生成する
-func (h *NotificationHandler) generateStatusBasedMessage(status *dto.MedicationStatusResponse) string {
-	if status.IsRestPeriod {
-		// 休薬期間中のメッセージ
-		if status.RestDaysLeft > 0 {
-			return fmt.Sprintf("現在休薬期間中です。あと%d日で服薬を再開してください。", status.RestDaysLeft)
-		} else {
-			return "休薬期間が終了しました。本日から服薬を再開してください。"
-		}
-	} else {
-		// 通常の服薬期間のメッセージ
-		if status.CurrentStreak > 0 {
-			return fmt.Sprintf("お薬の時間です。忘れずに服用してください。（連続%d日目）", status.CurrentStreak)
-		} else {
-			return "お薬の時間です。忘れずに服用してください。"
-		}
-	}
 }

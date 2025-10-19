@@ -17,43 +17,41 @@ run = "go test ./..."
 dir = "backend"
 description = "バックエンドのGoテストを実行"
 
+[tasks.backend_fmt]
+run = "gofmt -w internal"
+dir = "backend"
+description = "バックエンドのGoコードを整形"
+
 [tasks.frontend_install]
 run = "bun install"
 dir = "frontend"
 description = "フロントエンド依存関係をインストール"
 
-
-
-
 [tasks.frontend_dev]
 run = "bun run dev"
 dir = "frontend"
-description = "Next.js開発サーバー"
+description = "フロントエンド開発サーバー"
 
 [tasks.frontend_build]
 run = "bun run build"
 dir = "frontend"
-description = "Next.jsアプリのビルド"
+description = "フロントエンドのビルド"
 
 [tasks.frontend_lint]
 run = "bun run lint"
 dir = "frontend"
-description = "フロントエンドLint"
+description = "フロントエンドの lint"
 
 [tasks.frontend_lint_fix]
 run = "bun run lint:fix"
 dir = "frontend"
-description = "フロントエンドLintの自動修正"
+description = "フロントエンドの lint を自動修正"
 
 [tasks.setup]
 depends = ["backend_deps", "frontend_install"]
 description = "モノレポ環境の初期セットアップ"
 
 [tasks.dev]
-run = "bun run dev:all"
-description = "バックエンドとフロントエンドの開発サーバーを並列起動するユーティリティ"
-
-[tasks.test]
-depends = ["backend_test"]
-description = "全体テスト（現状はバックエンドのみ）"
+depends = ["backend_dev", "frontend_dev"]
+description = "バックエンドとフロントエンドの開発サーバーを起動"
 
