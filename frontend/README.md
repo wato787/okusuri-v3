@@ -1,30 +1,30 @@
 # okusuri-frontend
 
-Next.js 15 (App Router) を利用した服薬管理アプリのフロントエンドです。bunを標準のパッケージランナーとして利用します。
+React + Vite を利用した服薬管理アプリのフロントエンドです。bunを標準のパッケージランナーとして利用します。
 
 ## セットアップ
 
 ```
-mise run frontend:install
+mise run frontend_install
 ```
 
 ## 開発
 
 ```
-mise run frontend:dev
+mise run frontend_dev
 ```
 
 ## ビルド
 
 ```
-mise run frontend:build
+mise run frontend_build
 ```
 
 ## Lint
 
 ```
-mise run frontend:lint
-mise run frontend:lint-fix
+mise run frontend_lint
+mise run frontend_lint-fix
 ```
 
 詳細な開発フローはルート`README.md`を参照してください。

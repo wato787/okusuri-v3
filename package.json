@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "setup": "mise run setup",
-    "dev:backend": "mise run backend:dev",
-    "dev:frontend": "mise run frontend:dev",
+    "dev:backend": "mise run backend_dev",
+    "dev:frontend": "mise run frontend_dev",
     "dev": "mise run dev",
     "test": "mise run test"
   }
