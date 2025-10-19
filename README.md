@@ -41,7 +41,7 @@ mise run setup
 | --- | --- |
 | `bun run dev:backend` | バックエンド開発サーバー起動 |
 | `bun run dev:frontend` | フロントエンド開発サーバー起動 |
-| `bun run dev:all` | バックエンドとフロントエンドを同時起動 |
+| `bun run dev` | バックエンドとフロントエンドを同時起動 |
 | `mise run test` | バックエンドのGoテストを実行 |
 
 ※ `bun run dev:*` はルートの `package.json` で定義されています。
@@ -49,13 +49,13 @@ mise run setup
 ## バックエンド
 - フレームワーク: Gin
 - データベース: PostgreSQL (devcontainerのdocker-composeで起動)
-- 重要コマンド: `mise run backend:dev`, `mise run backend:test`
+- 重要コマンド: `mise run backend_dev`, `mise run backend_test`
 
 ## フロントエンド
 - Next.js 15 / React 19
-- 開発: `mise run frontend:dev`
-- ビルド: `mise run frontend:build`
-- Lint: `mise run frontend:lint`
+- 開発: `mise run frontend_dev`
+- ビルド: `mise run frontend_build`
+- Lint: `mise run frontend_lint`
 
 ## Bun移行について
 - `frontend/`はbunをデフォルトのランナーとして使用します。

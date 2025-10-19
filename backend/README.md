@@ -8,8 +8,8 @@
 
 - Go 1.24
 - PostgreSQL
-- 起動: `mise run backend:dev`
-- テスト: `mise run backend:test`
+- 起動: `mise run backend_dev`
+- テスト: `mise run backend_test`
 
 開発手順や環境構築はルート`README.md`を参照してください。
 
@@ -45,7 +45,7 @@ backend/
 ## テスト
 
 ```
-mise run backend:test
+mise run backend_test
 ```
 
 ## データベース

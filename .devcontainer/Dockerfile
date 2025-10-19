@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 # 必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # miseをインストール
-ARG MISE_VERSION=2025.10.7
+ARG MISE_VERSION=v2025.9.24
 USER vscode
-RUN curl -fsSL "https://mise.jdx.dev/install.sh" | MISE_VERSION=v${MISE_VERSION} sh
+RUN curl -fsSL "https://mise.jdx.dev/install.sh" | MISE_VERSION=${MISE_VERSION} sh
 USER root
 
 # 作業ディレクトリを設定
