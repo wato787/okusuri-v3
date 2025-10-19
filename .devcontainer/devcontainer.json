@@ -5,7 +5,7 @@
   },
   "features": {},
   "workspaceFolder": "/workspaces/okusuri-v3",
-  "postCreateCommand": "mise install",
+  "postCreateCommand": ".devcontainer/scripts/setup.sh",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
