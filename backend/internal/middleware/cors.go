@@ -1,18 +1,27 @@
 package middleware
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-func CORS() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	"github.com/labstack/echo/v4"
+)
 
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
+func CORS() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			res := c.Response()
+			req := c.Request()
+
+			res.Header().Set("Access-Control-Allow-Origin", "*")
+			res.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			res.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			if req.Method == http.MethodOptions {
+				res.WriteHeader(http.StatusNoContent)
+				return nil
+			}
+
+			return next(c)
 		}
-
-		c.Next()
 	}
 }

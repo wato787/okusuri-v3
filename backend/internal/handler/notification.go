@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 
 	"okusuri-backend/internal/dto"
 	"okusuri-backend/internal/model"
@@ -39,76 +39,62 @@ func (h *NotificationHandler) getNotificationService() *service.NotificationServ
 	return h.notificationSvc
 }
 
-// GetSetting は通知設定を取得するハンドラー
-func (h *NotificationHandler) GetSetting(c *gin.Context) {
-	// 通知設定を取得
+func (h *NotificationHandler) GetSetting(c echo.Context) error {
 	setting, err := h.notificationRepo.GetSettingByUserID(dummyUserID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get notification setting"})
-		return
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to get notification setting"})
 	}
 
-	c.JSON(http.StatusOK, setting)
+	return c.JSON(http.StatusOK, setting)
 }
 
-// RegisterSetting は通知設定を登録するハンドラー
-func (h *NotificationHandler) RegisterSetting(c *gin.Context) {
-	userID := dummyUserID
-
-	// リクエストボディから通知設定を取得
+func (h *NotificationHandler) RegisterSetting(c echo.Context) error {
 	var req dto.RegisterNotificationSettingRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
-		return
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request body"})
 	}
 
-	// 通知設定をモデルに変換
 	setting := model.NotificationSetting{
-		UserID:       userID,
+		UserID:       dummyUserID,
 		IsEnabled:    req.IsEnabled,
 		Platform:     req.Platform,
 		Subscription: req.Subscription,
 	}
 
-	// リポジトリに登録処理を依頼
 	if err := h.notificationRepo.RegisterSetting(&setting); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register notification setting"})
-		return
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to register notification setting"})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "notification setting registered successfully"})
+	return c.JSON(http.StatusOK, map[string]string{"message": "notification setting registered successfully"})
 }
 
-// SendNotification は通知を送信するハンドラー
-func (h *NotificationHandler) SendNotification(c *gin.Context) {
+func (h *NotificationHandler) SendNotification(c echo.Context) error {
 	requestTime := time.Now()
 	h.logRequestStart(c, requestTime)
 
 	users, settings, err := h.fetchUsersAndSettings(c)
 	if err != nil {
-		return
+		return nil
 	}
 
 	settingsMap := h.buildSettingsMap(settings)
 	sentCount := h.processNotifications(users, settingsMap)
 
 	h.logAndRespond(c, requestTime, sentCount)
+	return nil
 }
 
-// logRequestStart はリクエスト開始時のログを出力する
-func (h *NotificationHandler) logRequestStart(c *gin.Context, requestTime time.Time) {
+func (h *NotificationHandler) logRequestStart(c echo.Context, requestTime time.Time) {
 	fmt.Printf("\n========== 通知送信処理開始 [%s] ==========\n", requestTime.Format("2006-01-02 15:04:05"))
-	fmt.Printf("リクエストパス: %s\n", c.Request.URL.Path)
-	fmt.Printf("リクエスト元IP: %s\n", c.ClientIP())
-	fmt.Printf("リクエストID: %s\n", c.Writer.Header().Get("Request-ID"))
+	fmt.Printf("リクエストパス: %s\n", c.Request().URL.Path)
+	fmt.Printf("リクエスト元IP: %s\n", c.RealIP())
 }
 
-// fetchUsersAndSettings はユーザーと通知設定を取得する
-func (h *NotificationHandler) fetchUsersAndSettings(c *gin.Context) ([]model.User, []model.NotificationSetting, error) {
+func (h *NotificationHandler) fetchUsersAndSettings(c echo.Context) ([]model.User, []model.NotificationSetting, error) {
 	users, userErr := h.userRepo.GetAllUsers()
 	if userErr != nil {
 		fmt.Printf("エラー: ユーザー取得失敗: %v\n", userErr)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get users"})
+		c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to get users"})
 		return nil, nil, userErr
 	}
 	fmt.Printf("取得したユーザー数: %d\n", len(users))
@@ -116,7 +102,7 @@ func (h *NotificationHandler) fetchUsersAndSettings(c *gin.Context) ([]model.Use
 	settings, settingsErr := h.notificationRepo.GetAllSettings()
 	if settingsErr != nil {
 		fmt.Printf("エラー: 通知設定取得失敗: %v\n", settingsErr)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get notification settings"})
+		c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to get notification settings"})
 		return nil, nil, settingsErr
 	}
 	fmt.Printf("取得した通知設定数: %d\n", len(settings))
@@ -124,10 +110,7 @@ func (h *NotificationHandler) fetchUsersAndSettings(c *gin.Context) ([]model.Use
 	return users, settings, nil
 }
 
-// buildSettingsMap は通知設定をユーザーIDでマップ化する
-func (h *NotificationHandler) buildSettingsMap(
-	settings []model.NotificationSetting,
-) map[string]model.NotificationSetting {
+func (h *NotificationHandler) buildSettingsMap(settings []model.NotificationSetting) map[string]model.NotificationSetting {
 	settingsMap := make(map[string]model.NotificationSetting)
 	for _, setting := range settings {
 		existingSetting, exists := settingsMap[setting.UserID]
@@ -139,7 +122,6 @@ func (h *NotificationHandler) buildSettingsMap(
 	return settingsMap
 }
 
-// processNotifications は各ユーザーに通知を送信する
 func (h *NotificationHandler) processNotifications(
 	users []model.User, settingsMap map[string]model.NotificationSetting,
 ) int {
@@ -156,7 +138,6 @@ func (h *NotificationHandler) processNotifications(
 	return len(sentSubs)
 }
 
-// sendUserNotification は個別ユーザーに通知を送信する
 func (h *NotificationHandler) sendUserNotification(
 	user model.User, settingsMap map[string]model.NotificationSetting, sentSubs map[string]bool,
 ) bool {
@@ -181,12 +162,11 @@ func (h *NotificationHandler) sendUserNotification(
 	return true
 }
 
-// logAndRespond は処理結果をログ出力してレスポンスを返す
-func (h *NotificationHandler) logAndRespond(c *gin.Context, requestTime time.Time, sentCount int) {
+func (h *NotificationHandler) logAndRespond(c echo.Context, requestTime time.Time, sentCount int) {
 	processingTime := time.Since(requestTime)
 	fmt.Printf("処理時間: %v\n", processingTime)
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"message":         "notification sent successfully",
 		"sent_count":      sentCount,
 		"process_time_ms": processingTime.Milliseconds(),

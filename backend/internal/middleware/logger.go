@@ -4,20 +4,23 @@ import (
 	"log"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
-func Logger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		start := time.Now()
-		path := c.Request.URL.Path
+func Logger() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			start := time.Now()
+			path := c.Request().URL.Path
 
-		// リクエスト処理の前
-		c.Next()
+			if err := next(c); err != nil {
+				c.Error(err)
+			}
 
-		// リクエスト処理の後
-		latency := time.Since(start)
-		status := c.Writer.Status()
-		log.Printf("| %3d | %13v | %s", status, latency, path)
+			latency := time.Since(start)
+			status := c.Response().Status
+			log.Printf("| %3d | %13v | %s", status, latency, path)
+			return nil
+		}
 	}
 }

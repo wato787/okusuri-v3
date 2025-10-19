@@ -6,7 +6,7 @@
 
 ```
 .
-├── backend/   # Go (Gin) 製APIサーバー
+├── backend/   # Go (Echo) 製APIサーバー
 ├── frontend/  # Next.js (App Router) フロントエンド
 ├── .devcontainer/  # VS Code Dev Container 設定
 └── mise.toml  # ツールおよびタスク定義
@@ -24,7 +24,7 @@
 3. 起動後、ターミナルで以下を実行し依存関係をセットアップ
 
 ```bash
-mise run setup
+mise setup
 ```
 
 ### Dev Containerを使わない場合
@@ -32,36 +32,36 @@ mise run setup
 
 ```bash
 mise install
-mise run setup
+mise setup
 ```
 
 ## 主要タスク
 
 | コマンド | 内容 |
 | --- | --- |
-| `bun run dev:backend` | バックエンド開発サーバー起動 |
-| `bun run dev:frontend` | フロントエンド開発サーバー起動 |
-| `bun run dev` | バックエンドとフロントエンドを同時起動 |
-| `mise run test` | バックエンドのGoテストを実行 |
+| `mise backend_dev` | バックエンド開発サーバー起動 |
+| `mise frontend_dev` | フロントエンド開発サーバー起動 |
+| `mise dev` | バックエンドとフロントエンドを並列起動 |
+| `mise backend_test` | バックエンドのGoテストを実行 |
+| `mise frontend_build` | フロントエンドのビルド |
 
-※ `bun run dev:*` はルートの `package.json` で定義されています。
+> ルートの `package.json` からも `npm run dev` 等で同等タスクを実行できます。
 
 ## バックエンド
-- フレームワーク: Gin
+- フレームワーク: Echo
 - データベース: PostgreSQL (devcontainerのdocker-composeで起動)
-- 重要コマンド: `mise run backend_dev`, `mise run backend_test`
+- 主要コマンド: `mise backend_dev`, `mise backend_test`, `mise backend_fmt`
 
 ## フロントエンド
 - Next.js 15 / React 19
-- 開発: `mise run frontend_dev`
-- ビルド: `mise run frontend_build`
-- Lint: `mise run frontend_lint`
+- 開発: `mise frontend_dev`
+- ビルド: `mise frontend_build`
+- Lint: `mise frontend_lint`
 
-## Bun移行について
-- `frontend/`はbunをデフォルトのランナーとして使用します。
-- `pnpm-lock.yaml`など不要となった依存管理ファイルは削除しました。
-- bun設定は`frontend/bunfig.toml`で行います。
+## Bun利用について
+- `frontend/` は bun をデフォルトのランナーとして使用します。
+- bun 設定は `frontend/bunfig.toml` を参照してください。
 
 ## その他
-- PostgreSQLはdevcontainerの`docker-compose.yml`で立ち上がります。ローカル起動する場合は同等の環境変数 (ユーザー/パスワード/DB名いずれも`okusuri`) を設定してください。
-- 追加のタスクや運用スクリプトは`mise.toml`に追記していく想定です。
+- PostgreSQL は devcontainer の `docker-compose.yml` で立ち上がります。ローカル起動する場合は同等の環境変数 (ユーザー/パスワード/DB名いずれも `okusuri`) を設定してください。
+- 追加のタスクや運用スクリプトは `mise.toml` を更新する方針です。
