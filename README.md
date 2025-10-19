@@ -52,7 +52,7 @@ mise run setup
 - 重要コマンド: `mise run backend_dev`, `mise run backend_test`
 
 ## フロントエンド
-- Next.js 15 / React 19
+- React + Vite
 - 開発: `mise run frontend_dev`
 - ビルド: `mise run frontend_build`
 - Lint: `mise run frontend_lint`
