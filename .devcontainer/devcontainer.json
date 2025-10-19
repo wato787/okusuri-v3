@@ -4,6 +4,8 @@
     "dockerfile": "Dockerfile"
   },
   "dockerComposeFile": "docker-compose.yml",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
+  "workspaceFolder": "/app",
   "shutdownAction": "stopCompose",
   "features": {
       "ghcr.io/devcontainers/features/common-utils:2": {
@@ -13,11 +15,13 @@
       "installOhMyZshConfig": true
     }
   },
-  "workspaceFolder": "/app",
   "settings": {
     "dev.containers.dockerCredentialHelper": false
   },
-  "postCreateCommand": ".devcontainer/scripts/setup.sh",
+  "postCreateCommand": [
+    "bash",
+    ".devcontainer/scripts/setup.sh"
+  ],
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {

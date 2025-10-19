@@ -2,51 +2,51 @@
 go = "1.24"
 bun = "latest"
 
-[tasks.backend:deps]
+[tasks.backend_deps]
 run = "go mod download"
-cwd = "backend"
+dir = "backend"
 description = "バックエンド依存関係を取得"
 
-[tasks.backend:dev]
+[tasks.backend_dev]
 run = "go run ./cmd/server"
-cwd = "backend"
+dir = "backend"
 description = "バックエンドAPIサーバーを起動"
 
-[tasks.backend:test]
+[tasks.backend_test]
 run = "go test ./..."
-cwd = "backend"
+dir = "backend"
 description = "バックエンドのGoテストを実行"
 
-[tasks.frontend:install]
+[tasks.frontend_install]
 run = "bun install"
-cwd = "frontend"
+dir = "frontend"
 description = "フロントエンド依存関係をインストール"
 
 
 
 
-[tasks.frontend:dev]
+[tasks.frontend_dev]
 run = "bun run dev"
-cwd = "frontend"
+dir = "frontend"
 description = "Next.js開発サーバー"
 
-[tasks.frontend:build]
+[tasks.frontend_build]
 run = "bun run build"
-cwd = "frontend"
+dir = "frontend"
 description = "Next.jsアプリのビルド"
 
-[tasks.frontend:lint]
+[tasks.frontend_lint]
 run = "bun run lint"
-cwd = "frontend"
+dir = "frontend"
 description = "フロントエンドLint"
 
-[tasks.frontend:lint-fix]
+[tasks.frontend_lint_fix]
 run = "bun run lint:fix"
-cwd = "frontend"
+dir = "frontend"
 description = "フロントエンドLintの自動修正"
 
 [tasks.setup]
-depends = ["backend:deps", "frontend:install"]
+depends = ["backend_deps", "frontend_install"]
 description = "モノレポ環境の初期セットアップ"
 
 [tasks.dev]
@@ -54,6 +54,6 @@ run = "bun run dev:all"
 description = "バックエンドとフロントエンドの開発サーバーを並列起動するユーティリティ"
 
 [tasks.test]
-depends = ["backend:test"]
+depends = ["backend_test"]
 description = "全体テスト（現状はバックエンドのみ）"
 

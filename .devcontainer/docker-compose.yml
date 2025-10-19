@@ -1,5 +1,5 @@
 services:
-  app:
+  okusuri:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile

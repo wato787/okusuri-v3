@@ -1,8 +1,8 @@
-import { HomeView } from "@/views/home/HomeView";
+import { Home } from "@/views/home";
 import "@/styles/globals.css";
 
 export function App() {
-  return <HomeView />;
+  return <Home />;
 }
 
 export default App;

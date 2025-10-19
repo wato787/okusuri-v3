@@ -35,7 +35,7 @@ const defaultSummary: MedicationSummary = {
 
 const REST_PERIOD_TOTAL_DAYS = 4;
 
-export function HomeView() {
+export function Home() {
   const [summary, setSummary] = useState<MedicationSummary>(defaultSummary);
   const [isPending, startTransition] = useTransition();
   const [activeButton, setActiveButton] = useState<"bleeding" | "normal" | null>(
@@ -165,7 +165,7 @@ export function HomeView() {
                 <Clock className="mr-3 h-5 w-5 flex-shrink-0 text-blue-500" />
                 <span className="font-medium">
                   {summary.isRestPeriod
-                    ? `あと${summary.restDaysLeft}日` + "の休薬期間を続けてください"
+                    ? `あと${summary.restDaysLeft}日の休薬期間を続けてください`
                     : summary.consecutiveBleedingDays >= 3
                     ? "休薬期間に入ることをお勧めします"
                     : "毎日服用を続けてください"}

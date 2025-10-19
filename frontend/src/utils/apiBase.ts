@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 /**
  * APIレスポンスの基本型定義
  * すべてのAPIレスポンスの基本となる共通の型
@@ -46,16 +44,26 @@ type NextFetchOptions = {
 	tags?: string[];
 };
 
-const API_BASE_URL = process.env.API_BASE_URL || "";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
-const getAccessToken = async () => {
-	const accessToken = (await cookies()).get(
-		"__Secure-better-auth.session_token",
-	);
-	if (accessToken) {
-		return accessToken.value.split(".")[0];
+const SESSION_COOKIE_NAME = "__Secure-better-auth.session_token";
+
+const getAccessToken = (): string | null => {
+	if (typeof document === "undefined") {
+		return null;
 	}
-	return null;
+
+	const cookie = document.cookie
+		.split("; ")
+		.find((entry) => entry.startsWith(`${SESSION_COOKIE_NAME}=`));
+
+	if (!cookie) {
+		return null;
+	}
+
+	const value = cookie.slice(SESSION_COOKIE_NAME.length + 1);
+	const decoded = decodeURIComponent(value);
+	return decoded.split(".")[0] ?? null;
 };
 
 /**
@@ -91,13 +99,22 @@ export const get = async <T>(
 	path: string,
 	fetchOptions?: FetchOptions,
 ): Promise<ApiResponse<T>> => {
+	const accessToken = getAccessToken();
+
+	const headers: Record<string, string> = {
+		...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+		...fetchOptions?.headers,
+	};
+
 	const options: FetchOptions = {
 		method: "GET",
-		headers: {
-			Authorization: `Bearer ${await getAccessToken()}`,
-		},
 		...fetchOptions,
+		headers,
 	};
+
+	if (!options.credentials) {
+		options.credentials = "include";
+	}
 
 	return fetchWithOptions<T>(path, options);
 };
@@ -115,18 +132,29 @@ export const get = async <T>(
 export const post = async <T, U>(
 	path: string,
 	body?: T,
-
 	fetchOptions?: FetchOptions,
 ): Promise<ApiResponse<U>> => {
+	const accessToken = getAccessToken();
+
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+		...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+		...fetchOptions?.headers,
+	};
+
 	const options: FetchOptions = {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${await getAccessToken()}`,
-		},
-		...(body && { body: JSON.stringify(body) }),
 		...fetchOptions,
+		headers,
 	};
+
+	if (body !== undefined) {
+		options.body = JSON.stringify(body);
+	}
+
+	if (!options.credentials) {
+		options.credentials = "include";
+	}
 
 	return fetchWithOptions<U>(path, options);
 };
@@ -146,15 +174,27 @@ export const patch = async <T, U = BaseResponse>(
 	body?: T,
 	fetchOptions?: FetchOptions,
 ): Promise<ApiResponse<U>> => {
+	const accessToken = getAccessToken();
+
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+		...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+		...fetchOptions?.headers,
+	};
+
 	const options: FetchOptions = {
 		method: "PATCH",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${await getAccessToken()}`,
-		},
-		...(body && { body: JSON.stringify(body) }),
 		...fetchOptions,
+		headers,
 	};
+
+	if (body !== undefined) {
+		options.body = JSON.stringify(body);
+	}
+
+	if (!options.credentials) {
+		options.credentials = "include";
+	}
 
 	return fetchWithOptions<U>(path, options);
 };
@@ -171,14 +211,23 @@ export const del = async <T>(
 	path: string,
 	fetchOptions?: FetchOptions,
 ): Promise<ApiResponse<T>> => {
+	const accessToken = getAccessToken();
+
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+		...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+		...fetchOptions?.headers,
+	};
+
 	const options: FetchOptions = {
 		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${await getAccessToken()}`,
-		},
 		...fetchOptions,
+		headers,
 	};
+
+	if (!options.credentials) {
+		options.credentials = "include";
+	}
 
 	return fetchWithOptions<T>(path, options);
 };
