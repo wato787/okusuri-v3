@@ -15,29 +15,6 @@ func NewUserRepository() *UserRepository {
 	return &UserRepository{db: config.DB}
 }
 
-// GetDB はデータベース接続を取得
-func (r *UserRepository) GetDB() *gorm.DB {
-	return r.db
-}
-
-// GetUserByToken はトークンからユーザー情報を取得する
-func (r *UserRepository) GetUserByToken(token string) (*model.User, error) {
-	var user model.User
-	var session model.Session
-
-	// セッションを取得
-	if err := r.db.Where("token = ?", token).First(&session).Error; err != nil {
-		return nil, err
-	}
-
-	// ユーザーを取得
-	if err := r.db.Where("id = ?", session.UserID).First(&user).Error; err != nil {
-		return nil, err
-	}
-
-	return &user, nil
-}
-
 // GetAllUsers は全ユーザーを取得
 func (r *UserRepository) GetAllUsers() ([]model.User, error) {
 	var users []model.User

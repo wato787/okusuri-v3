@@ -2,20 +2,20 @@
 
 ## 概要
 
-`okusuri-backend`は、服薬管理アプリケーションのバックエンドAPIサーバーです。Go言語で開発され、服薬記録の管理、通知機能、ユーザー認証などの機能を提供します。
+`okusuri-backend`は、服薬管理アプリケーションのバックエンドAPIサーバーです。Go言語で開発され、服薬記録の管理や通知機能を提供します。
 
 ## 開発環境
 
 - Go 1.24
 - PostgreSQL
-- 起動: `mise run backend_dev`
-- テスト: `mise run backend_test`
+- 起動: `mise backend_dev`
+- テスト: `mise backend_test`
 
 開発手順や環境構築はルート`README.md`を参照してください。
 
 ## アーキテクチャ
 
-- Ginを用いたRESTful API
+- Echoを用いたRESTful API
 - レイヤードアーキテクチャ (handler/service/repository)
 - DTOやミドルウェアを活用した責務分離
 
@@ -37,7 +37,6 @@ backend/
 
 ## 主要機能
 
-- Google OAuth 2.0 + JWT による認証
 - 服薬ログ管理 (服薬記録・出血記録)
 - Web Push 通知
 - ヘルスチェックAPI
@@ -45,7 +44,7 @@ backend/
 ## テスト
 
 ```
-mise run backend_test
+mise backend_test
 ```
 
 ## データベース

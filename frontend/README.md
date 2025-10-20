@@ -1,30 +1,28 @@
-# okusuri-frontend
+# Frontend
 
-React + Vite を利用した服薬管理アプリのフロントエンドです。bunを標準のパッケージランナーとして利用します。
-
-## セットアップ
+## Setup
 
 ```
-mise run frontend_install
+mise frontend_install
 ```
 
-## 開発
+## Development
 
 ```
-mise run frontend_dev
+mise frontend_dev
 ```
 
-## ビルド
+## Build
 
 ```
-mise run frontend_build
+mise frontend_build
 ```
 
 ## Lint
 
 ```
-mise run frontend_lint
-mise run frontend_lint-fix
+mise frontend_lint
+mise frontend_lint_fix
 ```
 
 詳細な開発フローはルート`README.md`を参照してください。

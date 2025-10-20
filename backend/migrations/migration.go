@@ -14,9 +14,6 @@ func RunMigrations(db *gorm.DB) {
 	// マイグレーション対象のモデルをここに追加
 	err := db.AutoMigrate(
 		&model.User{},
-		&model.Session{},
-		&model.Account{},
-		&model.Verification{},
 		&model.NotificationSetting{}, 
 		&model.MedicationLog{},
 	)
