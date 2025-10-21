@@ -5,10 +5,22 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/app:cached
+      - /app/node_modules  # node_modulesを除外してパフォーマンス向上
     command: /bin/sh -c "while sleep 1000; do :; done"
     user: vscode
     networks:
       - devcontainer
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://okusuri:okusuri@db:5432/okusuri
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
 
   db:
     image: postgres:16-alpine
@@ -17,12 +29,25 @@ services:
       POSTGRES_USER: okusuri
       POSTGRES_PASSWORD: okusuri
       POSTGRES_DB: okusuri
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - devcontainer
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U okusuri -d okusuri"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
 volumes:
   postgres-data:
