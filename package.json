@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "description": "お薬管理アプリのモノレポ",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "setup": "mise exec setup",
     "dev": "mise exec dev",
     "test": "mise exec typecheck && mise exec frontend_lint",
     "build": "mise exec frontend_build",
-    "backend:dev": "cd backend && bun run dev",
-    "frontend:dev": "cd frontend && bun run dev",
-    "backend:build": "cd backend && bun run typecheck",
-    "frontend:build": "cd frontend && bun run build",
-    "backend:lint": "cd backend && bun run lint",
-    "frontend:lint": "cd frontend && bun run lint",
+    "backend:dev": "bun run --filter=okusuri-backend dev",
+    "frontend:dev": "bun run --filter=okusuri-frontend dev",
+    "backend:build": "bun run --filter=okusuri-backend typecheck",
+    "frontend:build": "bun run --filter=okusuri-frontend build",
+    "backend:lint": "bun run --filter=okusuri-backend lint",
+    "frontend:lint": "bun run --filter=okusuri-frontend lint",
     "lint": "mise exec lint",
     "typecheck": "mise exec typecheck"
   },
