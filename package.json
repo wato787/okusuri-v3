@@ -1,0 +1,21 @@
+{
+  "name": "okusuri-monorepo",
+  "version": "1.0.0",
+  "description": "お薬管理アプリのモノレポ",
+  "private": true,
+  "scripts": {
+    "setup": "mise exec setup",
+    "dev": "mise exec dev",
+    "test": "mise exec backend_test && mise exec frontend_lint",
+    "build": "mise exec frontend_build",
+    "backend:dev": "cd backend-hono && bun run dev",
+    "frontend:dev": "cd frontend && bun run dev",
+    "backend:build": "cd backend-hono && bun run typecheck",
+    "frontend:build": "cd frontend && bun run build",
+    "backend:lint": "cd backend-hono && bun run lint",
+    "frontend:lint": "cd frontend && bun run lint"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
