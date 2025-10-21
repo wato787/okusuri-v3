@@ -8,7 +8,7 @@ export const notificationRepository = (db: D1Database) => {
   const client = drizzle(db, { schema });
 
   return {
-    getSettingByUserId(userId: string) {
+    async getSettingByUserId(userId: string) {
       return client
         .select()
         .from(schema.notificationSettings)
@@ -18,7 +18,7 @@ export const notificationRepository = (db: D1Database) => {
         .get();
     },
 
-    registerSetting(setting: {
+    async registerSetting(setting: {
       userId: string;
       isEnabled: boolean;
       platform: string;
@@ -32,7 +32,7 @@ export const notificationRepository = (db: D1Database) => {
       });
     },
 
-    getAllSettings() {
+    async getAllSettings() {
       return client.select().from(schema.notificationSettings);
     },
   };
