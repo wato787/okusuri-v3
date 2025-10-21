@@ -63,8 +63,7 @@
   "semanticCommitScope": "deps",
   "ignorePaths": [
     "**/node_modules/**",
-    "**/vendor/**",
-    "backend/**"
+    "**/vendor/**"
   ],
   "ignoreDeps": [],
   "packageRules": [
@@ -75,7 +74,7 @@
     },
     {
       "description": "バックエンド（hono）の依存関係", 
-      "matchPaths": ["backend-hono/**"],
+      "matchPaths": ["backend/**"],
       "addLabels": ["backend", "hono", "dependencies"]
     }
   ]

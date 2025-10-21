@@ -6,14 +6,16 @@
   "scripts": {
     "setup": "mise exec setup",
     "dev": "mise exec dev",
-    "test": "mise exec backend_test && mise exec frontend_lint",
+    "test": "mise exec typecheck && mise exec frontend_lint",
     "build": "mise exec frontend_build",
-    "backend:dev": "cd backend-hono && bun run dev",
+    "backend:dev": "cd backend && bun run dev",
     "frontend:dev": "cd frontend && bun run dev",
-    "backend:build": "cd backend-hono && bun run typecheck",
+    "backend:build": "cd backend && bun run typecheck",
     "frontend:build": "cd frontend && bun run build",
-    "backend:lint": "cd backend-hono && bun run lint",
-    "frontend:lint": "cd frontend && bun run lint"
+    "backend:lint": "cd backend && bun run lint",
+    "frontend:lint": "cd frontend && bun run lint",
+    "lint": "mise exec lint",
+    "typecheck": "mise exec typecheck"
   },
   "engines": {
     "node": ">=18.0.0"
