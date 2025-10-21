@@ -1,0 +1,20 @@
+{
+  "name": "okusuri-monorepo",
+  "version": "1.0.0",
+  "description": "お薬管理アプリのモノレポ",
+  "private": true,
+  "scripts": {
+    "renotate": "node scripts/renotate.js",
+    "renotate:check": "node scripts/renotate.js --check-only",
+    "setup": "mise exec setup",
+    "dev": "mise exec dev",
+    "test": "mise exec backend_test && mise exec frontend_lint",
+    "build": "mise exec frontend_build"
+  },
+  "devDependencies": {
+    "child_process": "^1.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
