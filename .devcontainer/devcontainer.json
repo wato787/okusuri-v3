@@ -55,10 +55,14 @@
       }
     }
   },
-  "forwardPorts": [5173, 5432],
+  "forwardPorts": [5173, 3001, 5432],
   "portsAttributes": {
     "5173": {
       "label": "Frontend Dev Server (Vite)",
+      "onAutoForward": "notify"
+    },
+    "3001": {
+      "label": "Backend API Server",
       "onAutoForward": "notify"
     },
     "5432": {
