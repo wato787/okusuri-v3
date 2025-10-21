@@ -1,48 +1,4 @@
-/**
- * APIレスポンスの基本型定義
- * すべてのAPIレスポンスの基本となる共通の型
- */
-export type BaseResponse = {
-	/**
-	 * 操作の成功/失敗を示すステータス
-	 */
-	success: boolean;
-
-	/**
-	 * レスポンスに関連するメッセージ（成功時や失敗時のメッセージ）
-	 */
-	message?: string;
-
-	/**
-	 * エラーが発生した場合のエラーコード
-	 */
-	errorCode?: string;
-
-	/**
-	 * 操作が処理された時間のタイムスタンプ
-	 */
-	timestamp?: string;
-};
-
-export type ApiResponse<T> = {
-	status: number;
-	data: T;
-	headers: Headers;
-};
-
-type FetchOptions = {
-	method?: string;
-	headers?: Record<string, string>;
-	body?: BodyInit;
-	cache?: RequestCache;
-	next?: NextFetchOptions;
-	credentials?: RequestCredentials;
-};
-
-type NextFetchOptions = {
-	revalidate?: number | false;
-	tags?: string[];
-};
+import type { BaseResponse, ApiResponse, FetchOptions, NextFetchOptions } from '@okusuri/shared';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 

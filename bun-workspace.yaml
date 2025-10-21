@@ -2,3 +2,4 @@ name: "okusuri-monorepo"
 packages:
   - "backend"
   - "frontend"
+  - "shared"
