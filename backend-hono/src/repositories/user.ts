@@ -7,7 +7,7 @@ export const userRepository = (db: D1Database) => {
   const client = drizzle(db, { schema });
 
   return {
-    getAllUsers() {
+    async getAllUsers() {
       return client.select().from(schema.users);
     },
   };

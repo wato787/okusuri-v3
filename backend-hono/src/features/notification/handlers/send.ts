@@ -27,6 +27,7 @@ export const sendNotifications = async (c: Context) => {
       if (setting.subscription && sentSubs.has(setting.subscription)) continue;
 
       // 実際にはWeb Push送信処理などを呼び出す想定
+      // ここでuser.idやuserの他のプロパティを使用して通知を送信
       sentCount += 1;
 
       if (setting.subscription) {

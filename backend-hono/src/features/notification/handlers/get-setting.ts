@@ -8,7 +8,7 @@ export const getNotificationSetting = async (c: Context) => {
   const setting = await notificationRepository(db).getSettingByUserId(dummyUserId);
 
   if (!setting) {
-    return c.json({ error: 'failed to get notification setting' }, 500);
+    return c.json({ error: 'notification setting not found' }, 404);
   }
 
   return c.json(setting);

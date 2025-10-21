@@ -7,6 +7,11 @@ import { updateMedicationLogSchema } from '../schemas';
 export const updateMedicationLog = async (c: Context) => {
   const db = getDb(c);
   const id = Number.parseInt(c.req.param('id'), 10);
+  
+  if (Number.isNaN(id)) {
+    return c.json({ error: 'Invalid medication log ID' }, 400);
+  }
+  
   const body = updateMedicationLogSchema.parse(await c.req.json());
   const { hasBleeding } = body;
 
