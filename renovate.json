@@ -1,0 +1,75 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "description": "メジャーアップデートは手動確認が必要",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "addLabels": ["dependencies", "major-update"]
+    },
+    {
+      "description": "マイナー・パッチアップデートは自動マージ",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "addLabels": ["dependencies", "automerge"]
+    },
+    {
+      "description": "Reactは破壊的変更が多いため手動確認",
+      "matchPackageNames": ["react", "react-dom"],
+      "automerge": false,
+      "addLabels": ["dependencies", "react", "manual-review"]
+    },
+    {
+      "description": "セキュリティ更新は即座にマージ",
+      "matchPackageNames": ["*"],
+      "vulnerabilityAlerts": {
+        "enabled": true
+      },
+      "automerge": true,
+      "addLabels": ["dependencies", "security", "automerge"]
+    }
+  ],
+  "schedule": ["before 2am on monday"],
+  "timezone": "Asia/Tokyo",
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "branchPrefix": "renovate/",
+  "commitMessagePrefix": "chore:",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "addLabels": ["security"]
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 2am on monday"]
+  },
+  "rangeStrategy": "bump",
+  "bumpVersion": "patch",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vendor/**"
+  ],
+  "ignoreDeps": [],
+  "packageRules": [
+    {
+      "description": "フロントエンドの依存関係",
+      "matchPaths": ["frontend/**"],
+      "addLabels": ["frontend", "dependencies"]
+    },
+    {
+      "description": "バックエンドの依存関係", 
+      "matchPaths": ["backend/**"],
+      "addLabels": ["backend", "dependencies"]
+    }
+  ]
+}

@@ -4,8 +4,6 @@
   "description": "お薬管理アプリのモノレポ",
   "private": true,
   "scripts": {
-    "renotate": "node scripts/renotate.js",
-    "renotate:check": "node scripts/renotate.js --check-only",
     "setup": "mise exec setup",
     "dev": "mise exec dev",
     "test": "mise exec backend_test && mise exec frontend_lint",
