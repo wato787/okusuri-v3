@@ -2,7 +2,7 @@
   "name": "okusuri-backend",
   "private": true,
   "scripts": {
-    "dev": "bun run --bun src/server.ts",
+    "dev": "bun run --bun src/app.ts",
     "typecheck": "tsc --noEmit",
     "lint": "biome check ."
   },
