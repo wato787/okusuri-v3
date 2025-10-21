@@ -1,24 +1,23 @@
 [tools]
-node = "20"
 bun = "latest"
 
 [tasks.backend_deps]
-run = "npm install"
+run = "bun install"
 dir = "backend"
 description = "バックエンド依存関係をインストール"
 
 [tasks.backend_dev]
-run = "npm run dev"
+run = "bun run dev"
 dir = "backend"
 description = "バックエンドAPIサーバーを起動"
 
 [tasks.backend_typecheck]
-run = "npm run typecheck"
+run = "bun run typecheck"
 dir = "backend"
 description = "バックエンドのTypeScript型チェックを実行"
 
 [tasks.backend_lint]
-run = "npm run lint"
+run = "bun run lint"
 dir = "backend"
 description = "バックエンドのコードをリント"
 
