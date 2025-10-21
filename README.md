@@ -84,6 +84,12 @@ npm run test:coverage
 - カバレッジ設定は `codecov.yml` で管理されています
 - 目標カバレッジ: 80%
 
+#### セットアップ手順
+1. [codecov.io](https://codecov.io) でアカウントを作成し、このリポジトリを連携
+2. Codecovダッシュボードでリポジトリのトークンを取得
+3. GitHubリポジトリの Settings > Secrets and variables > Actions で以下を設定：
+   - `CODECOV_TOKEN`: Codecovから取得したトークン
+
 ## その他
 - PostgreSQL は devcontainer の `docker-compose.yml` で立ち上がります。ローカル起動する場合は同等の環境変数 (ユーザー/パスワード/DB名いずれも `okusuri`) を設定してください。
 - 追加のタスクや運用スクリプトは `mise.toml` を更新する方針です。
