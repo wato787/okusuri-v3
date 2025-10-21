@@ -1,26 +1,25 @@
 [tools]
-go = "1.24"
 bun = "latest"
 
 [tasks.backend_deps]
-run = "go mod download"
-dir = "backend"
-description = "バックエンド依存関係を取得"
+run = "bun install"
+dir = "backend-hono"
+description = "バックエンド（hono）依存関係を取得"
 
 [tasks.backend_dev]
-run = "go run ./cmd/server"
-dir = "backend"
-description = "バックエンドAPIサーバーを起動"
+run = "bun run dev"
+dir = "backend-hono"
+description = "バックエンド（hono）APIサーバーを起動"
 
 [tasks.backend_test]
-run = "go test ./..."
-dir = "backend"
-description = "バックエンドのGoテストを実行"
+run = "bun run typecheck"
+dir = "backend-hono"
+description = "バックエンド（hono）の型チェックを実行"
 
-[tasks.backend_fmt]
-run = "gofmt -w internal"
-dir = "backend"
-description = "バックエンドのGoコードを整形"
+[tasks.backend_lint]
+run = "bun run lint"
+dir = "backend-hono"
+description = "バックエンド（hono）のlintを実行"
 
 [tasks.frontend_install]
 run = "bun install"
@@ -53,5 +52,5 @@ description = "モノレポ環境の初期セットアップ"
 
 [tasks.dev]
 depends = ["backend_dev", "frontend_dev"]
-description = "バックエンドとフロントエンドの開発サーバーを起動"
+description = "バックエンド（hono）とフロントエンドの開発サーバーを起動"
 
