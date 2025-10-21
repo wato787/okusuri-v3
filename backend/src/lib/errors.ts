@@ -1,7 +1,9 @@
+import { ERROR_CODES, HTTP_STATUS } from '@okusuri/shared';
+
 export class AppError extends Error {
   constructor(
     message: string,
-    public statusCode: number = 500,
+    public statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR,
     public code?: string
   ) {
     super(message);
@@ -9,7 +11,7 @@ export class AppError extends Error {
   }
 }
 
-export const createError = (message: string, statusCode: number = 500, code?: string) => {
+export const createError = (message: string, statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR, code?: string) => {
   return new AppError(message, statusCode, code);
 };
 
@@ -19,5 +21,9 @@ export const handleError = (error: unknown) => {
   }
   
   console.error('Unhandled error:', error);
-  return { message: 'Internal server error', statusCode: 500 };
+  return { 
+    message: 'Internal server error', 
+    statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+    code: ERROR_CODES.INTERNAL_ERROR
+  };
 };
