@@ -46,8 +46,12 @@ run = "bun run lint:fix"
 dir = "frontend"
 description = "フロントエンドの lint を自動修正"
 
+[tasks.env_setup]
+run = "node scripts/setup-env.js"
+description = "環境変数ファイルを自動生成"
+
 [tasks.setup]
-depends = ["backend_deps", "frontend_install"]
+depends = ["env_setup", "backend_deps", "frontend_install"]
 description = "モノレポ環境の初期セットアップ"
 
 [tasks.dev]
