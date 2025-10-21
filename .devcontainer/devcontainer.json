@@ -8,30 +8,75 @@
   "workspaceFolder": "/app",
   "shutdownAction": "stopCompose",
   "features": {
-      "ghcr.io/devcontainers/features/common-utils:2": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": true,
       "installOhMyZsh": true,
       "configureZshAsDefaultShell": true,
-      "installOhMyZshConfig": true
+      "installOhMyZshConfig": true,
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
     }
   },
   "settings": {
-    "dev.containers.dockerCredentialHelper": false
+    "dev.containers.dockerCredentialHelper": false,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.biome": "explicit"
+    },
+    "biome.lspBin": "/home/vscode/.local/bin/biome"
   },
   "postCreateCommand": [
     "bash",
     ".devcontainer/scripts/setup.sh"
   ],
+  "postStartCommand": "mise install",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
       "extensions": [
-        "golang.go",
         "bradlc.vscode-tailwindcss",
         "csstools.postcss",
-        "dbaeumer.vscode-eslint",
-        "biomejs.biome"
-      ]
+        "biomejs.biome",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode.remote-explorer",
+        "ms-vscode.remote-repositories",
+        "github.copilot",
+        "github.copilot-chat",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "files.eol": "\n",
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true
+      }
+    }
+  },
+  "forwardPorts": [3000, 3001, 5432],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend Dev Server",
+      "onAutoForward": "notify"
+    },
+    "3001": {
+      "label": "Backend API Server",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database",
+      "onAutoForward": "silent"
     }
   }
 }
