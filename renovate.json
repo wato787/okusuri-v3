@@ -21,6 +21,12 @@
       "addLabels": ["dependencies", "react", "manual-review"]
     },
     {
+      "description": "Honoは破壊的変更が多いため手動確認",
+      "matchPackageNames": ["hono"],
+      "automerge": false,
+      "addLabels": ["dependencies", "hono", "manual-review"]
+    },
+    {
       "description": "セキュリティ更新は即座にマージ",
       "matchPackageNames": ["*"],
       "vulnerabilityAlerts": {
@@ -67,9 +73,9 @@
       "addLabels": ["frontend", "dependencies"]
     },
     {
-      "description": "バックエンドの依存関係", 
+      "description": "バックエンド（hono）の依存関係", 
       "matchPaths": ["backend/**"],
-      "addLabels": ["backend", "dependencies"]
+      "addLabels": ["backend", "hono", "dependencies"]
     }
   ]
 }

@@ -1,26 +1,25 @@
 [tools]
-go = "1.24"
 bun = "latest"
 
 [tasks.backend_deps]
-run = "go mod download"
+run = "bun install"
 dir = "backend"
-description = "バックエンド依存関係を取得"
+description = "バックエンド依存関係をインストール"
 
 [tasks.backend_dev]
-run = "go run ./cmd/server"
+run = "bun run dev"
 dir = "backend"
 description = "バックエンドAPIサーバーを起動"
 
-[tasks.backend_test]
-run = "go test ./..."
+[tasks.backend_typecheck]
+run = "bun run typecheck"
 dir = "backend"
-description = "バックエンドのGoテストを実行"
+description = "バックエンドのTypeScript型チェックを実行"
 
-[tasks.backend_fmt]
-run = "gofmt -w internal"
+[tasks.backend_lint]
+run = "bun run lint"
 dir = "backend"
-description = "バックエンドのGoコードを整形"
+description = "バックエンドのコードをリント"
 
 [tasks.frontend_install]
 run = "bun install"
@@ -54,4 +53,12 @@ description = "モノレポ環境の初期セットアップ"
 [tasks.dev]
 depends = ["backend_dev", "frontend_dev"]
 description = "バックエンドとフロントエンドの開発サーバーを起動"
+
+[tasks.lint]
+depends = ["backend_lint", "frontend_lint"]
+description = "バックエンドとフロントエンドのリントを実行"
+
+[tasks.typecheck]
+depends = ["backend_typecheck"]
+description = "バックエンドの型チェックを実行"
 

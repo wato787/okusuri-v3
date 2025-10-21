@@ -1,56 +1,68 @@
-# okusuri-backend
+# Okusuri Backend (Hono)
 
-## 概要
+服薬管理アプリケーションのバックエンドAPI（Hono + Bun + Drizzle）
 
-`okusuri-backend`は、服薬管理アプリケーションのバックエンドAPIサーバーです。Go言語で開発され、服薬記録の管理や通知機能を提供します。
+## 技術スタック
 
-## 開発環境
+- **フレームワーク**: Hono
+- **ランタイム**: Bun
+- **データベース**: SQLite (Drizzle ORM)
+- **バリデーション**: Zod
 
-- Go 1.24
-- PostgreSQL
-- 起動: `mise backend_dev`
-- テスト: `mise backend_test`
-
-開発手順や環境構築はルート`README.md`を参照してください。
-
-## アーキテクチャ
-
-- Echoを用いたRESTful API
-- レイヤードアーキテクチャ (handler/service/repository)
-- DTOやミドルウェアを活用した責務分離
-
-## ディレクトリ
+## ディレクトリ構成
 
 ```
-backend/
-├── cmd/server/      # エントリーポイント
-├── internal/        # ドメインロジック
-│   ├── dto/
-│   ├── handler/
-│   ├── middleware/
-│   ├── model/
-│   ├── repository/
-│   └── service/
-├── pkg/             # 設定やユーティリティ
-└── migrations/      # DBマイグレーション
+src/
+├── app.ts                 # アプリケーションエントリーポイント
+├── types.ts              # 共通型定義
+├── context/              # コンテキスト管理
+│   ├── bindings.ts       # 型定義
+│   └── helpers.ts        # コンテキストヘルパー
+├── features/             # 機能別モジュール
+│   ├── health/           # ヘルスチェック
+│   ├── medication/       # 服薬ログ管理
+│   │   ├── handlers/     # 各エンドポイントのハンドラー
+│   │   ├── schemas/      # バリデーションスキーマ
+│   │   └── router.ts     # ルート定義
+│   └── notification/     # 通知機能
+├── repositories/         # データアクセス層
+├── middleware/           # ミドルウェア
+├── lib/                  # ユーティリティ
+└── db/                   # データベース関連
+    └── schema.ts         # Drizzleスキーマ
 ```
 
-## 主要機能
+## 開発環境セットアップ
 
-- 服薬ログ管理 (服薬記録・出血記録)
-- Web Push 通知
-- ヘルスチェックAPI
+### 前提条件
 
-## テスト
+- Bun 1.3.0+
 
+### セットアップ
+
+1. 依存関係のインストール
+```bash
+bun install
 ```
-mise backend_test
+
+### 開発サーバー起動
+
+```bash
+bun run dev
 ```
 
-## データベース
+## API エンドポイント
 
-PostgreSQLを利用します。開発時はdevcontainerの`docker-compose.yml`で起動するDBを利用できます。
+### ヘルスチェック
+- `GET /api/health` - サービス状態確認
 
-## 今後のメモ
+### 服薬ログ
+- `POST /api/medication-log` - 服薬ログ登録
+- `GET /api/medication-log` - 服薬ログ一覧取得
+- `GET /api/medication-log/:id` - 特定ログ取得
+- `PATCH /api/medication-log/:id` - ログ更新
 
-- 詳細なAPI仕様は今後OpenAPI等で整備予定です。
+### 通知
+- `POST /api/notification` - 通知送信
+- `GET /api/notification/setting` - 通知設定取得
+- `POST /api/notification/setting` - 通知設定登録
