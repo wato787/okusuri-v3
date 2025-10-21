@@ -43,17 +43,10 @@
         "csstools.postcss",
         "biomejs.biome",
         "ms-vscode.vscode-typescript-next",
-        "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode",
         "ms-vscode.vscode-json",
-        "redhat.vscode-yaml",
         "ms-vscode-remote.remote-containers",
-        "ms-vscode.remote-explorer",
-        "ms-vscode.remote-repositories",
         "github.copilot",
-        "github.copilot-chat",
-        "ms-vscode.vscode-typescript-next",
-        "ms-vscode.vscode-eslint"
+        "github.copilot-chat"
       ],
       "settings": {
         "editor.tabSize": 2,
@@ -64,14 +57,10 @@
       }
     }
   },
-  "forwardPorts": [3000, 3001, 5432],
+  "forwardPorts": [5173, 5432],
   "portsAttributes": {
-    "3000": {
-      "label": "Frontend Dev Server",
-      "onAutoForward": "notify"
-    },
-    "3001": {
-      "label": "Backend API Server",
+    "5173": {
+      "label": "Frontend Dev Server (Vite)",
       "onAutoForward": "notify"
     },
     "5432": {
