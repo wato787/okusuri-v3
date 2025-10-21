@@ -1,5 +1,5 @@
 {
-  "name": "okusuri-backend-hono",
+  "name": "okusuri-backend",
   "private": true,
   "scripts": {
     "dev": "bun run --bun src/app.ts",
