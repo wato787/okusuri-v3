@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "bun run --bun src/app.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "biome check ."
+    "lint": "biome check .",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20241018.0",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",
+    "@types/bun": "latest",
     "typescript": "^5.6.3"
   }
 }

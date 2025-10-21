@@ -62,6 +62,28 @@ mise setup
 - `frontend/` は bun をデフォルトのランナーとして使用します。
 - bun 設定は `frontend/bunfig.toml` を参照してください。
 
+## テストとカバレッジ
+
+### テスト実行
+```bash
+# 全テスト実行
+npm run test
+
+# バックエンドのみ
+npm run test:backend
+
+# フロントエンドのみ
+npm run test:frontend
+
+# カバレッジ付きテスト
+npm run test:coverage
+```
+
+### Codecov統合
+- プルリクエストやプッシュ時に自動的にカバレッジレポートがCodecovに送信されます
+- カバレッジ設定は `codecov.yml` で管理されています
+- 目標カバレッジ: 80%
+
 ## その他
 - PostgreSQL は devcontainer の `docker-compose.yml` で立ち上がります。ローカル起動する場合は同等の環境変数 (ユーザー/パスワード/DB名いずれも `okusuri`) を設定してください。
 - 追加のタスクや運用スクリプトは `mise.toml` を更新する方針です。
