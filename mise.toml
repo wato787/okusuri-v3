@@ -3,23 +3,23 @@ bun = "latest"
 
 [tasks.backend_deps]
 run = "bun install"
-dir = "backend-hono"
-description = "バックエンド（hono）依存関係を取得"
+dir = "backend"
+description = "バックエンド依存関係をインストール"
 
 [tasks.backend_dev]
 run = "bun run dev"
-dir = "backend-hono"
-description = "バックエンド（hono）APIサーバーを起動"
+dir = "backend"
+description = "バックエンドAPIサーバーを起動"
 
-[tasks.backend_test]
+[tasks.backend_typecheck]
 run = "bun run typecheck"
-dir = "backend-hono"
-description = "バックエンド（hono）の型チェックを実行"
+dir = "backend"
+description = "バックエンドのTypeScript型チェックを実行"
 
 [tasks.backend_lint]
 run = "bun run lint"
-dir = "backend-hono"
-description = "バックエンド（hono）のlintを実行"
+dir = "backend"
+description = "バックエンドのコードをリント"
 
 [tasks.frontend_install]
 run = "bun install"
@@ -52,5 +52,13 @@ description = "モノレポ環境の初期セットアップ"
 
 [tasks.dev]
 depends = ["backend_dev", "frontend_dev"]
-description = "バックエンド（hono）とフロントエンドの開発サーバーを起動"
+description = "バックエンドとフロントエンドの開発サーバーを起動"
+
+[tasks.lint]
+depends = ["backend_lint", "frontend_lint"]
+description = "バックエンドとフロントエンドのリントを実行"
+
+[tasks.typecheck]
+depends = ["backend_typecheck"]
+description = "バックエンドの型チェックを実行"
 
