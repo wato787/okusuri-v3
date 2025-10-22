@@ -1,0 +1,205 @@
+# システム概要
+
+お薬管理アプリのアーキテクチャと設計思想について説明します。
+
+## 🏗️ 全体アーキテクチャ
+
+### モノレポ構成
+
+このプロジェクトは、以下の3つのパッケージで構成されるモノレポです：
+
+```
+okusuri-monorepo/
+├── backend/     # API サーバー（Hono + Cloudflare Workers）
+├── frontend/    # Web アプリケーション（React + Vite）
+└── shared/      # 共通ライブラリ（型定義・ユーティリティ）
+```
+
+### 技術スタック
+
+#### バックエンド
+- **フレームワーク**: Hono
+- **ランタイム**: Cloudflare Workers
+- **データベース**: Drizzle ORM
+- **バリデーション**: Zod
+- **言語**: TypeScript
+
+#### フロントエンド
+- **フレームワーク**: React 19
+- **ビルドツール**: Vite
+- **スタイリング**: Tailwind CSS
+- **UI コンポーネント**: Radix UI
+- **アニメーション**: Framer Motion
+- **言語**: TypeScript
+
+#### 共通
+- **パッケージマネージャー**: Bun
+- **型チェック**: TypeScript
+- **リント**: Biome
+- **テスト**: Bun Test
+
+## 🔄 データフロー
+
+### 1. ユーザーインタラクション
+```
+ユーザー → React コンポーネント → API 呼び出し
+```
+
+### 2. API リクエスト処理
+```
+フロントエンド → Hono ルーター → ハンドラー → リポジトリ → データベース
+```
+
+### 3. レスポンス処理
+```
+データベース → リポジトリ → ハンドラー → フロントエンド → UI 更新
+```
+
+## 📊 データベース設計
+
+### エンティティ関係図
+
+```
+User (ユーザー)
+├── MedicationLog (薬のログ)
+└── NotificationSetting (通知設定)
+    └── Medication (薬の情報)
+```
+
+### 主要テーブル
+
+1. **users** - ユーザー情報
+2. **medication_logs** - 薬の服用ログ
+3. **notification_settings** - 通知設定
+
+## 🔌 API 設計
+
+### RESTful API エンドポイント
+
+```
+/api/health              # ヘルスチェック
+/api/medication-log      # 薬のログ管理
+/api/notification        # 通知管理
+```
+
+### レスポンス形式
+
+```typescript
+// 成功レスポンス
+{
+  success: true,
+  data: T,
+  message?: string,
+  timestamp: string
+}
+
+// エラーレスポンス
+{
+  success: false,
+  message: string,
+  errorCode?: string,
+  timestamp: string
+}
+```
+
+## 🎨 フロントエンド設計
+
+### コンポーネント構成
+
+```
+App
+└── Home
+    ├── Header
+    ├── MedicationList
+    ├── MedicationForm
+    └── BottomNavigation
+```
+
+### 状態管理
+
+- React の useState/useEffect を使用
+- グローバル状態は必要に応じて Context API を検討
+
+### スタイリング
+
+- Tailwind CSS によるユーティリティファーストのスタイリング
+- Radix UI によるアクセシブルなコンポーネント
+- Framer Motion によるスムーズなアニメーション
+
+## 🔒 セキュリティ
+
+### 認証・認可
+
+- 現在は認証機能は未実装
+- 将来的には JWT ベースの認証を検討
+
+### データ保護
+
+- 入力値のバリデーション（Zod）
+- SQL インジェクション対策（Drizzle ORM）
+- CORS 設定
+
+## 📱 レスポンシブデザイン
+
+### ブレークポイント
+
+- **モバイル**: 320px - 768px
+- **タブレット**: 768px - 1024px
+- **デスクトップ**: 1024px+
+
+### デザイン原則
+
+- モバイルファースト
+- タッチフレンドリーなUI
+- アクセシビリティを重視
+
+## 🚀 パフォーマンス
+
+### フロントエンド最適化
+
+- Vite による高速ビルド
+- コード分割
+- 画像最適化
+- バンドルサイズの最適化
+
+### バックエンド最適化
+
+- Cloudflare Workers によるエッジコンピューティング
+- データベースクエリの最適化
+- キャッシュ戦略
+
+## 🔄 開発ワークフロー
+
+### ブランチ戦略
+
+- `main`: 本番環境
+- `develop`: 開発環境
+- `feature/*`: 機能開発
+- `hotfix/*`: 緊急修正
+
+### CI/CD
+
+- 型チェック
+- リント
+- テスト実行
+- ビルド検証
+
+## 📈 スケーラビリティ
+
+### 水平スケーリング
+
+- Cloudflare Workers による自動スケーリング
+- ステートレスな設計
+
+### データベーススケーリング
+
+- 読み取り専用レプリカの活用
+- インデックスの最適化
+
+## 🔗 関連ドキュメント
+
+- [セットアップガイド](./setup.md)
+- [API仕様書](./api.md)
+- [データベース設計](./database.md)
+- [フロントエンド開発](./frontend.md)
+- [バックエンド開発](./backend.md)
