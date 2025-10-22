@@ -1,0 +1,49 @@
+name: Test and Coverage
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: |
+        cd backend && bun install
+        cd ../frontend && bun install
+        
+    - name: Run backend tests with coverage
+      run: |
+        cd backend
+        bun test --coverage
+      env:
+        NODE_ENV: test
+        
+    - name: Run frontend tests with coverage
+      run: |
+        cd frontend
+        bun test --coverage
+      env:
+        NODE_ENV: test
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./backend/coverage/lcov.info,./frontend/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        verbose: true
