@@ -47,7 +47,7 @@ dir = "frontend"
 description = "フロントエンドの lint を自動修正"
 
 [tasks.env_setup]
-run = "node scripts/setup-env.js"
+run = "bun scripts/setup-env.js"
 description = "環境変数ファイルを自動生成"
 
 [tasks.setup]
