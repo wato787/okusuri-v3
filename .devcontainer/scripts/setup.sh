@@ -57,6 +57,14 @@ if command -v mise >/dev/null 2>&1; then
     log "📦 依存関係をインストール中..."
     mise install --parallel || error "依存関係のインストールに失敗しました"
     
+    # 環境変数ファイルを生成
+    log "🔧 環境変数ファイルを生成中..."
+    if [ -f "scripts/setup-env.js" ]; then
+        bun scripts/setup-env.js || log "⚠️  環境変数ファイルの生成で警告が発生しました"
+    else
+        log "⚠️  scripts/setup-env.js が見つかりません"
+    fi
+    
     # セットアップタスクを実行
     log "🔧 セットアップタスクを実行中..."
     mise run setup || error "セットアップタスクの実行に失敗しました"
@@ -75,6 +83,13 @@ if command -v bun >/dev/null 2>&1; then
     log "✅ bun が利用可能です: $(bun --version)"
 else
     log "⚠️  bun が見つかりません"
+fi
+
+# 環境変数ファイルの最終確認
+log "🔍 環境変数ファイルの最終確認中..."
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    log "⚠️  .env ファイルが見つかりません。手動で生成します..."
+    bun scripts/setup-env.js || log "⚠️  手動生成で警告が発生しました"
 fi
 
 log "✅ Devcontainer セットアップが完了しました！"

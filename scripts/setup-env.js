@@ -31,22 +31,22 @@ const envFiles = [
  * @param {string} examplePath - 例ファイルのパス
  * @param {string} targetPath - ターゲットファイルのパス
  * @param {string} description - ファイルの説明
- * @returns {Promise<boolean>} 成功した場合true
+ * @returns {{ success: boolean, skipped: boolean, error: boolean }} 処理結果
  */
-async function setupEnvFile(examplePath, targetPath, description) {
+function setupEnvFile(examplePath, targetPath, description) {
   const fullExamplePath = path.resolve(examplePath);
   const fullTargetPath = path.resolve(targetPath);
 
   // ターゲットファイルが既に存在する場合はスキップ
   if (fs.existsSync(fullTargetPath)) {
     console.log(`✅ ${description} は既に存在します: ${targetPath}`);
-    return true;
+    return { success: true, skipped: true, error: false };
   }
 
   // 例ファイルが存在しない場合はスキップ
   if (!fs.existsSync(fullExamplePath)) {
     console.log(`⚠️  ${description} の例ファイルが見つかりません: ${examplePath}`);
-    return false;
+    return { success: false, skipped: true, error: false };
   }
 
   try {
@@ -59,37 +59,39 @@ async function setupEnvFile(examplePath, targetPath, description) {
     // 例ファイルをコピー
     fs.copyFileSync(fullExamplePath, fullTargetPath);
     console.log(`✅ ${description} を作成しました: ${targetPath}`);
-    return true;
+    return { success: true, skipped: false, error: false };
   } catch (error) {
     console.error(`❌ ${description} の作成に失敗しました: ${error.message}`);
-    return false;
+    return { success: false, skipped: false, error: true };
   }
 }
 
 /**
  * メイン処理
  */
-async function main() {
+function main() {
   console.log('🔧 環境変数ファイルのセットアップを開始します...\n');
 
-  const results = await Promise.all(
-    envFiles.map(({ example, target, description }) =>
-      setupEnvFile(example, target, description)
-    )
+  const results = envFiles.map(({ example, target, description }) =>
+    setupEnvFile(example, target, description)
   );
 
-  const successCount = results.filter(Boolean).length;
+  const successCount = results.filter(r => r.success).length;
+  const errorCount = results.filter(r => r.error).length;
+  const skippedCount = results.filter(r => r.skipped).length;
   const totalCount = envFiles.length;
 
   console.log('\n✨ 環境変数ファイルのセットアップが完了しました！');
   console.log(`📊 成功: ${successCount}/${totalCount} ファイル`);
+  console.log(`📊 スキップ: ${skippedCount} ファイル`);
   console.log('📝 必要に応じて、作成された.envファイルを編集してください。');
 
-  // すべてのファイルが成功した場合のみ正常終了
-  if (successCount === totalCount) {
-    process.exit(0);
-  } else {
+  // 実際のエラー（コピー失敗など）がある場合のみ失敗
+  if (errorCount > 0) {
+    console.log(`❌ ${errorCount} 個のファイルでエラーが発生しました`);
     process.exit(1);
+  } else {
+    process.exit(0);
   }
 }
 
