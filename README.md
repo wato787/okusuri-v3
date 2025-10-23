@@ -1,13 +1,14 @@
 # okusuri-v3
 
-このリポジトリは服薬管理アプリケーションのモノレポ構成です。Go製バックエンドとNext.jsフロントエンドを一つのリポジトリで管理し、開発環境はdevcontainerとmiseで統一しています。
+このリポジトリは服薬管理アプリケーションのモノレポ構成です。Bun + Hono製バックエンドとReact + Viteフロントエンドを一つのリポジトリで管理し、開発環境はdevcontainerとmiseで統一しています。
 
 ## リポジトリ構成
 
 ```
 .
-├── backend/   # Go (Echo) 製APIサーバー
-├── frontend/  # Next.js (App Router) フロントエンド
+├── backend/   # Bun + Hono 製APIサーバー
+├── frontend/  # React + Vite フロントエンド
+├── shared/    # 共通型定義とユーティリティ
 ├── .devcontainer/  # VS Code Dev Container 設定
 └── mise.toml  # ツールおよびタスク定義
 ```
@@ -21,42 +22,55 @@
 ### Dev Containerでの利用
 1. VS Codeでこのリポジトリを開く
 2. `Dev Containers: Reopen in Container` を実行
-3. 起動後、ターミナルで以下を実行し依存関係をセットアップ
+3. コンテナ起動時に自動的に以下が実行されます：
+   - mise ツールのインストール
+   - bun のインストール
+   - 全パッケージの依存関係インストール
+   - 環境変数ファイルの自動生成
+   - PostgreSQL データベースの起動
+
+4. 起動完了後、開発を開始するには：
 
 ```bash
-mise setup
+# バックエンドとフロントエンドを同時起動
+mise exec dev
+
+# または個別に起動
+mise exec backend_dev  # バックエンドのみ
+mise exec frontend_dev # フロントエンドのみ
 ```
 
 ### Dev Containerを使わない場合
-必要なツール（Go 1.24, bun）を手動で用意し、次を実行してください。
+必要なツール（bun）を手動で用意し、次を実行してください。
 
 ```bash
 mise install
-mise setup
+mise exec setup
 ```
 
 ## 主要タスク
 
 | コマンド | 内容 |
 | --- | --- |
-| `mise backend_dev` | バックエンド開発サーバー起動 |
-| `mise frontend_dev` | フロントエンド開発サーバー起動 |
-| `mise dev` | バックエンドとフロントエンドを並列起動 |
-| `mise backend_test` | バックエンドのGoテストを実行 |
-| `mise frontend_build` | フロントエンドのビルド |
+| `mise exec backend_dev` | バックエンド開発サーバー起動 |
+| `mise exec frontend_dev` | フロントエンド開発サーバー起動 |
+| `mise exec dev` | バックエンドとフロントエンドを並列起動 |
+| `mise exec backend_test` | バックエンドのテストを実行 |
+| `mise exec frontend_build` | フロントエンドのビルド |
+| `mise exec setup` | 初期セットアップ（依存関係インストール等） |
 
-> ルートの `package.json` からも `npm run dev` 等で同等タスクを実行できます。
+> ルートの `package.json` からも `bun run dev` 等で同等タスクを実行できます。
 
 ## バックエンド
-- フレームワーク: Echo
+- フレームワーク: Hono + Bun
 - データベース: PostgreSQL (devcontainerのdocker-composeで起動)
-- 主要コマンド: `mise backend_dev`, `mise backend_test`, `mise backend_fmt`
+- 主要コマンド: `mise exec backend_dev`, `mise exec backend_test`, `mise exec backend_lint`
 
 ## フロントエンド
-- React + Vite
-- 開発: `mise frontend_dev`
-- ビルド: `mise frontend_build`
-- Lint: `mise frontend_lint`
+- React + Vite + TypeScript
+- 開発: `mise exec frontend_dev`
+- ビルド: `mise exec frontend_build`
+- Lint: `mise exec frontend_lint`
 
 ## Bun利用について
 - `frontend/` は bun をデフォルトのランナーとして使用します。
@@ -67,16 +81,16 @@ mise setup
 ### テスト実行
 ```bash
 # 全テスト実行
-npm run test
+bun run test
 
 # バックエンドのみ
-npm run test:backend
+bun run test:backend
 
 # フロントエンドのみ
-npm run test:frontend
+bun run test:frontend
 
 # カバレッジ付きテスト
-npm run test:coverage
+bun run test:coverage
 ```
 
 ### Codecov統合
@@ -90,6 +104,12 @@ npm run test:coverage
 3. GitHubリポジトリの Settings > Secrets and variables > Actions で以下を設定：
    - `CODECOV_TOKEN`: Codecovから取得したトークン
 
+## 環境変数
+- 環境変数ファイルは自動生成されます（`.env.example` から `.env` にコピー）
+- 必要に応じて生成された `.env` ファイルを編集してください
+- データベース接続情報は devcontainer で自動設定されます
+
 ## その他
-- PostgreSQL は devcontainer の `docker-compose.yml` で立ち上がります。ローカル起動する場合は同等の環境変数 (ユーザー/パスワード/DB名いずれも `okusuri`) を設定してください。
-- 追加のタスクや運用スクリプトは `mise.toml` を更新する方針です。
+- PostgreSQL は devcontainer の `docker-compose.yml` で立ち上がります
+- ポート設定: フロントエンド(5173), バックエンド(3000), データベース(5432)
+- 追加のタスクや運用スクリプトは `mise.toml` を更新する方針です

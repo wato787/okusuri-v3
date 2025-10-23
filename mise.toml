@@ -51,12 +51,21 @@ run = "bun scripts/setup-env.js"
 description = "環境変数ファイルを自動生成"
 
 [tasks.setup]
-depends = ["env_setup", "backend_deps", "frontend_install"]
+depends = ["env_setup", "backend_deps", "frontend_install", "shared_deps"]
 description = "モノレポ環境の初期セットアップ"
+
+[tasks.shared_deps]
+run = "bun install"
+dir = "shared"
+description = "共有パッケージ依存関係をインストール"
 
 [tasks.dev]
 depends = ["backend_dev", "frontend_dev"]
 description = "バックエンドとフロントエンドの開発サーバーを起動"
+
+[tasks.dev_background]
+run = "bun run dev"
+description = "バックグラウンドで開発サーバーを起動"
 
 [tasks.lint]
 depends = ["backend_lint", "frontend_lint"]
