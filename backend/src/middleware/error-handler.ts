@@ -6,6 +6,6 @@ export const errorHandler = (): MiddlewareHandler => async (c, next) => {
     await next();
   } catch (error) {
     const { message, statusCode } = handleError(error);
-    return c.json({ error: message }, statusCode as any);
+    return c.json({ error: message }, statusCode);
   }
 };

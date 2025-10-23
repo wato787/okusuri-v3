@@ -34,7 +34,7 @@
     "bash",
     ".devcontainer/scripts/setup.sh"
   ],
-  "postStartCommand": "mise install",
+  "postStartCommand": "mise install && bun scripts/setup-env.js",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
