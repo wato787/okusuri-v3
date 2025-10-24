@@ -10,5 +10,10 @@ export const createMedicationLog = async (c: Context) => {
 
   const log = await medicationRepository.registerLog(db, dummyUserId, body);
 
-  return c.json({ message: 'medication log registered successfully', log });
+  return c.json({ 
+    success: true,
+    message: 'medication log registered successfully', 
+    data: log,
+    timestamp: new Date().toISOString()
+  });
 };

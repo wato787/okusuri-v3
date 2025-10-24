@@ -5,7 +5,12 @@ export const errorHandler = (): MiddlewareHandler => async (c, next) => {
   try {
     await next();
   } catch (error) {
-    const { message, statusCode } = handleError(error);
-    return c.json({ error: message }, statusCode);
+    const { message, statusCode, code } = handleError(error);
+    return c.json({ 
+      success: false,
+      message, 
+      errorCode: code,
+      timestamp: new Date().toISOString()
+    }, statusCode);
   }
 };

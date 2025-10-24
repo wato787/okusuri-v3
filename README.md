@@ -33,11 +33,11 @@
 
 ```bash
 # バックエンドとフロントエンドを同時起動
-mise exec dev
+mise dev
 
 # または個別に起動
-mise exec backend_dev  # バックエンドのみ
-mise exec frontend_dev # フロントエンドのみ
+mise backend_dev  # バックエンドのみ
+mise frontend_dev # フロントエンドのみ
 ```
 
 ### Dev Containerを使わない場合
@@ -45,32 +45,32 @@ mise exec frontend_dev # フロントエンドのみ
 
 ```bash
 mise install
-mise exec setup
+mise setup
 ```
 
 ## 主要タスク
 
 | コマンド | 内容 |
 | --- | --- |
-| `mise exec backend_dev` | バックエンド開発サーバー起動 |
-| `mise exec frontend_dev` | フロントエンド開発サーバー起動 |
-| `mise exec dev` | バックエンドとフロントエンドを並列起動 |
-| `mise exec backend_test` | バックエンドのテストを実行 |
-| `mise exec frontend_build` | フロントエンドのビルド |
-| `mise exec setup` | 初期セットアップ（依存関係インストール等） |
+| `mise backend_dev` | バックエンド開発サーバー起動 |
+| `mise frontend_dev` | フロントエンド開発サーバー起動 |
+| `mise dev` | バックエンドとフロントエンドを並列起動 |
+| `mise backend_test` | バックエンドのテストを実行 |
+| `mise frontend_build` | フロントエンドのビルド |
+| `mise setup` | 初期セットアップ（依存関係インストール等） |
 
 > ルートの `package.json` からも `bun run dev` 等で同等タスクを実行できます。
 
 ## バックエンド
 - フレームワーク: Hono + Bun
 - データベース: PostgreSQL (devcontainerのdocker-composeで起動)
-- 主要コマンド: `mise exec backend_dev`, `mise exec backend_test`, `mise exec backend_lint`
+- 主要コマンド: `mise backend_dev`, `mise backend_test`, `mise backend_lint`
 
 ## フロントエンド
 - React + Vite + TypeScript
-- 開発: `mise exec frontend_dev`
-- ビルド: `mise exec frontend_build`
-- Lint: `mise exec frontend_lint`
+- 開発: `mise frontend_dev`
+- ビルド: `mise frontend_build`
+- Lint: `mise frontend_lint`
 
 ## Bun利用について
 - `frontend/` は bun をデフォルトのランナーとして使用します。

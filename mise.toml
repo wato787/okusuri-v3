@@ -11,6 +11,10 @@ run = "bun run dev"
 dir = "backend"
 description = "バックエンドAPIサーバーを起動"
 
+[tasks.dev]
+depends = ["backend_dev", "frontend_dev"]
+description = "バックエンドとフロントエンドの開発サーバーを起動"
+
 [tasks.backend_typecheck]
 run = "bun run typecheck"
 dir = "backend"
@@ -58,10 +62,6 @@ description = "モノレポ環境の初期セットアップ"
 run = "bun install"
 dir = "shared"
 description = "共有パッケージ依存関係をインストール"
-
-[tasks.dev]
-depends = ["backend_dev", "frontend_dev"]
-description = "バックエンドとフロントエンドの開発サーバーを起動"
 
 [tasks.dev_background]
 run = "bun run dev"
