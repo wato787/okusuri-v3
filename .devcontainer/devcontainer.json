@@ -30,11 +30,8 @@
     },
     "biome.lspBin": "/home/vscode/.local/bin/biome"
   },
-  "postCreateCommand": [
-    "bash",
-    ".devcontainer/scripts/setup.sh"
-  ],
-  "postStartCommand": "mise install && bun scripts/setup-env.js",
+  "postCreateCommand": "bash .devcontainer/scripts/setup.sh",
+  "postStartCommand": "echo 'Devcontainer is ready! Run: mise exec dev'",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
@@ -55,10 +52,14 @@
       }
     }
   },
-  "forwardPorts": [5173, 5432],
+  "forwardPorts": [5173, 3000, 5432],
   "portsAttributes": {
     "5173": {
       "label": "Frontend Dev Server (Vite)",
+      "onAutoForward": "notify"
+    },
+    "3000": {
+      "label": "Backend API Server",
       "onAutoForward": "notify"
     },
     "5432": {

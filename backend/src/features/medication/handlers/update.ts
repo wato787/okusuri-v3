@@ -9,7 +9,12 @@ export const updateMedicationLog = async (c: Context) => {
   const id = Number.parseInt(c.req.param('id'), 10);
   
   if (Number.isNaN(id)) {
-    return c.json({ error: 'Invalid medication log ID' }, 400);
+    return c.json({ 
+      success: false,
+      message: 'Invalid medication log ID',
+      errorCode: 'INVALID_ID',
+      timestamp: new Date().toISOString()
+    }, 400);
   }
   
   const body = updateMedicationLogSchema.parse(await c.req.json());
@@ -23,11 +28,17 @@ export const updateMedicationLog = async (c: Context) => {
   );
 
   if (!updated) {
-    return c.json({ error: 'log not found or user not authorized' }, 404);
+    return c.json({ 
+      success: false,
+      message: 'log not found or user not authorized',
+      errorCode: 'NOT_FOUND',
+      timestamp: new Date().toISOString()
+    }, 404);
   }
 
   return c.json({
     success: true,
     message: 'medication log updated successfully',
+    timestamp: new Date().toISOString()
   });
 };

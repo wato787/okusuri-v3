@@ -21,8 +21,10 @@ jobs:
         
     - name: Install dependencies
       run: |
+        bun install
         cd backend && bun install
         cd ../frontend && bun install
+        cd ../shared && bun install
         
     - name: Run backend tests with coverage
       run: |
@@ -30,6 +32,7 @@ jobs:
         bun test --coverage
       env:
         NODE_ENV: test
+        DATABASE_URL: postgresql://test:test@localhost:5432/test
         
     - name: Run frontend tests with coverage
       run: |
@@ -47,3 +50,4 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: false
         verbose: true
+        directory: ./

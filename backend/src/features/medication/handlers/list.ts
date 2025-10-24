@@ -6,5 +6,9 @@ import { dummyUserId } from '../../../lib/auth';
 export const listMedicationLogs = async (c: Context) => {
   const db = getDb(c);
   const logs = await medicationRepository.getLogsByUserId(db, dummyUserId);
-  return c.json(logs);
+  return c.json({
+    success: true,
+    data: logs,
+    timestamp: new Date().toISOString()
+  });
 };
