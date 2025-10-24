@@ -158,5 +158,27 @@
     "documentation": "Thorough documentation",
     "codeReview": "Strict code review process",
     "refactoring": "Continuous refactoring"
+  },
+  "communication": {
+    "language": "Japanese",
+    "commitMessages": "日本語で記述",
+    "pullRequestTitles": "日本語で記述",
+    "pullRequestDescriptions": "日本語で記述",
+    "codeComments": "日本語で記述",
+    "documentation": "日本語で記述",
+    "variableNames": "英語（camelCase）",
+    "functionNames": "英語（camelCase）",
+    "classNames": "英語（PascalCase）",
+    "interfaceNames": "英語（PascalCase）",
+    "typeNames": "英語（PascalCase）",
+    "fileNames": "英語（camelCase/PascalCase）"
+  },
+  "git": {
+    "commitMessageFormat": "日本語",
+    "prTemplate": {
+      "title": "日本語で変更内容を簡潔に記述",
+      "description": "## 変更内容\n- 日本語で具体的な変更点を記述\n\n## 変更理由\n- 日本語で変更の背景・理由を記述\n\n## テスト\n- [ ] 単体テストを追加\n- [ ] 統合テストを追加\n- [ ] 手動テストを実施\n\n## チェックリスト\n- [ ] コードレビューを依頼\n- [ ] ドキュメントを更新\n- [ ] 破壊的変更がないことを確認"
+    },
+    "branchNaming": "feature/日本語機能名 または feature/english-feature-name"
   }
 }
