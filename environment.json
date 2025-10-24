@@ -1,0 +1,162 @@
+{
+  "name": "お薬管理アプリ - モノレポ",
+  "description": "TypeScript、React、Hono、Bunを使用したお薬管理アプリケーションのモノレポ",
+  "version": "1.0.0",
+  "type": "monorepo",
+  "workspaces": [
+    "backend",
+    "frontend", 
+    "shared"
+  ],
+  "technologies": {
+    "backend": {
+      "framework": "Hono",
+      "runtime": "Cloudflare Workers",
+      "database": "Drizzle ORM",
+      "validation": "Zod",
+      "language": "TypeScript"
+    },
+    "frontend": {
+      "framework": "React 19",
+      "buildTool": "Vite",
+      "styling": "Tailwind CSS",
+      "uiComponents": "Radix UI",
+      "animation": "Framer Motion",
+      "language": "TypeScript"
+    },
+    "common": {
+      "packageManager": "Bun",
+      "typeChecking": "TypeScript",
+      "linting": "Biome",
+      "testing": "Bun Test"
+    }
+  },
+  "projectStructure": {
+    "backend": {
+      "path": "backend/",
+      "description": "API サーバー（Hono + Cloudflare Workers）",
+      "entryPoint": "src/app.ts",
+      "features": [
+        "medication-management",
+        "notification-system",
+        "health-monitoring"
+      ]
+    },
+    "frontend": {
+      "path": "frontend/",
+      "description": "Web アプリケーション（React + Vite）",
+      "entryPoint": "src/main.tsx",
+      "features": [
+        "medication-logging",
+        "user-interface",
+        "responsive-design"
+      ]
+    },
+    "shared": {
+      "path": "shared/",
+      "description": "共通ライブラリ（型定義・ユーティリティ）",
+      "features": [
+        "type-definitions",
+        "api-interfaces",
+        "utility-functions"
+      ]
+    }
+  },
+  "development": {
+    "scripts": {
+      "setup": "mise exec setup",
+      "dev": "mise exec dev",
+      "test": "mise exec typecheck && mise exec frontend_lint",
+      "build": "mise exec frontend_build",
+      "lint": "mise exec lint",
+      "typecheck": "mise exec typecheck"
+    },
+    "tools": {
+      "mise": "環境管理ツール",
+      "biome": "リント・フォーマット",
+      "typescript": "型チェック",
+      "bun": "パッケージマネージャー・テストランナー"
+    }
+  },
+  "codingStandards": {
+    "language": "TypeScript",
+    "namingConventions": {
+      "variables": "camelCase",
+      "constants": "UPPER_SNAKE_CASE",
+      "classes": "PascalCase",
+      "interfaces": "PascalCase",
+      "types": "PascalCase",
+      "enums": "PascalCase"
+    },
+    "importOrder": [
+      "Node.js built-in modules",
+      "External libraries",
+      "Internal modules (absolute paths)",
+      "Relative paths"
+    ],
+    "fileNaming": {
+      "components": "PascalCase.tsx",
+      "utilities": "camelCase.ts",
+      "types": "camelCase.ts",
+      "tests": "camelCase.test.ts"
+    }
+  },
+  "architecture": {
+    "pattern": "Feature-based modular architecture",
+    "dataFlow": "Frontend → API → Handler → Repository → Database",
+    "stateManagement": "React hooks (useState/useEffect)",
+    "errorHandling": "Unified error response format",
+    "validation": "Zod schemas for input validation"
+  },
+  "security": {
+    "inputValidation": "Zod schemas",
+    "sqlInjection": "Drizzle ORM protection",
+    "cors": "Proper CORS configuration",
+    "authentication": "JWT-based (planned)",
+    "dataProtection": "Medical app security requirements"
+  },
+  "performance": {
+    "frontend": {
+      "buildTool": "Vite for fast builds",
+      "optimization": "Code splitting, image optimization",
+      "bundleSize": "Optimized bundle size"
+    },
+    "backend": {
+      "runtime": "Cloudflare Workers edge computing",
+      "database": "Query optimization, indexing",
+      "caching": "Strategic caching implementation"
+    }
+  },
+  "testing": {
+    "framework": "Bun Test",
+    "testFiles": "*.test.ts or *.test.tsx",
+    "coverage": "High coverage target",
+    "testData": "Fixture files management"
+  },
+  "documentation": {
+    "language": "Japanese",
+    "jsdoc": "Required for functions and classes",
+    "readme": "Each package has README.md",
+    "apiSpec": "docs/api.md",
+    "architecture": "docs/architecture.md"
+  },
+  "deployment": {
+    "backend": "Cloudflare Workers",
+    "frontend": "Static hosting",
+    "database": "Cloudflare D1 (planned)"
+  },
+  "constraints": {
+    "medicalApp": "High security and data integrity requirements",
+    "accessibility": "WCAG compliance",
+    "usability": "Mobile-first design",
+    "reliability": "Critical for medication management"
+  },
+  "guidelines": {
+    "typeSafety": "TypeScript strict mode",
+    "errorHandling": "Comprehensive error handling",
+    "testing": "Test-first development",
+    "documentation": "Thorough documentation",
+    "codeReview": "Strict code review process",
+    "refactoring": "Continuous refactoring"
+  }
+}
