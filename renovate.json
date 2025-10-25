@@ -34,6 +34,16 @@
       },
       "automerge": true,
       "addLabels": ["dependencies", "security", "automerge"]
+    },
+    {
+      "description": "フロントエンドの依存関係",
+      "matchPaths": ["frontend/**"],
+      "addLabels": ["frontend", "dependencies"]
+    },
+    {
+      "description": "バックエンド（hono）の依存関係",
+      "matchPaths": ["backend/**"],
+      "addLabels": ["backend", "hono", "dependencies"]
     }
   ],
   "schedule": ["before 2am on monday"],
@@ -65,17 +75,5 @@
     "**/node_modules/**",
     "**/vendor/**"
   ],
-  "ignoreDeps": [],
-  "packageRules": [
-    {
-      "description": "フロントエンドの依存関係",
-      "matchPaths": ["frontend/**"],
-      "addLabels": ["frontend", "dependencies"]
-    },
-    {
-      "description": "バックエンド（hono）の依存関係", 
-      "matchPaths": ["backend/**"],
-      "addLabels": ["backend", "hono", "dependencies"]
-    }
-  ]
+  "ignoreDeps": []
 }
