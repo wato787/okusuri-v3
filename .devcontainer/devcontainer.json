@@ -44,7 +44,9 @@
         "biomejs.biome",
         "ms-vscode.vscode-typescript-next",
         "ms-vscode.vscode-json",
-        "ms-vscode-remote.remote-containers"
+        "ms-vscode-remote.remote-containers",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml"
       ],
       "settings": {
         "editor.tabSize": 2,
