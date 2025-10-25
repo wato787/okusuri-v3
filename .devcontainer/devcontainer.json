@@ -30,8 +30,11 @@
     },
     "biome.lspBin": "/home/vscode/.local/bin/biome"
   },
-  "postCreateCommand": "bash .devcontainer/scripts/setup.sh",
-  "postStartCommand": "echo 'Devcontainer is ready! Run: mise exec dev'",
+  "postCreateCommand": [
+    "bash",
+    ".devcontainer/scripts/setup.sh"
+  ],
+  "postStartCommand": "mise install && bun scripts/setup-env.js",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
