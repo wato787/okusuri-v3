@@ -19,8 +19,6 @@ import {
   Pill,
 } from "lucide-react";
 
-import type { MedicationSummary as SharedMedicationSummary } from '@okusuri/shared';
-
 type MedicationSummary = {
   currentStreak: number;
   consecutiveBleedingDays: number;

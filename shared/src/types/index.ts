@@ -51,17 +51,6 @@ export interface NotificationSetting {
   updatedAt: string;
 }
 
-/**
- * 薬のサマリー情報（フロントエンド用）
- */
-export interface MedicationSummary {
-  id: string;
-  name: string;
-  nextDoseTime?: string;
-  isTakenToday: boolean;
-  totalDoses: number;
-  takenDoses: number;
-}
 
 /**
  * エラーレスポンスの型
