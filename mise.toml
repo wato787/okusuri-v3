@@ -2,9 +2,10 @@
 bun = "latest"
 
 [tasks.backend_deps]
-run = "bun install"
+run = "bun install --force"
 dir = "backend"
 description = "バックエンド依存関係をインストール"
+wait_for = ["shared_deps"]
 
 [tasks.backend_dev]
 run = "bun run dev"
@@ -26,9 +27,10 @@ dir = "backend"
 description = "バックエンドのコードをリント"
 
 [tasks.frontend_install]
-run = "bun install"
+run = "bun install --force"
 dir = "frontend"
 description = "フロントエンド依存関係をインストール"
+wait_for = ["shared_deps", "backend_deps"]
 
 [tasks.frontend_dev]
 run = "bun run dev"
@@ -50,18 +52,19 @@ run = "bun run lint:fix"
 dir = "frontend"
 description = "フロントエンドの lint を自動修正"
 
-[tasks.env_setup]
-run = "bun scripts/setup-env.js"
-description = "環境変数ファイルを自動生成"
-
 [tasks.setup]
-depends = ["env_setup", "backend_deps", "frontend_install", "shared_deps"]
+depends = ["shared_deps", "backend_frontend_deps"]
 description = "モノレポ環境の初期セットアップ"
 
 [tasks.shared_deps]
-run = "bun install"
+run = "bun install --force"
 dir = "shared"
 description = "共有パッケージ依存関係をインストール"
+
+[tasks.backend_frontend_deps]
+depends = ["backend_deps", "frontend_install"]
+description = "バックエンドとフロントエンドの依存関係をインストール"
+wait_for = ["shared_deps"]
 
 [tasks.dev_background]
 run = "bun run dev"
