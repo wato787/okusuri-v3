@@ -1,2 +1,2 @@
-[install]
-cache = false
+[test]
+root = "src"
