@@ -1,0 +1,270 @@
+---
+description: バックエンド開発ガイドライン
+alwaysApply: false
+---
+# バックエンド開発
+
+お薬管理アプリのバックエンド開発ガイドラインに従って開発してください。
+
+## 🏗️ アーキテクチャ概要
+
+### 技術スタック
+- **フレームワーク**: Hono
+- **ランタイム**: Cloudflare Workers
+- **データベース**: Drizzle ORM + Cloudflare D1
+- **バリデーション**: Zod
+- **言語**: TypeScript
+
+### ディレクトリ構造
+```
+backend/
+├── src/
+│   ├── app.ts                 # アプリケーションエントリーポイント
+│   ├── context/              # コンテキスト定義
+│   ├── db/                   # データベース関連
+│   ├── features/             # 機能別モジュール
+│   ├── lib/                  # ライブラリ
+│   ├── middleware/           # ミドルウェア
+│   ├── repositories/         # データアクセス層
+│   ├── routes/               # ルート定義
+│   └── types.ts              # 型定義
+```
+
+## 🚀 アプリケーション設定
+
+### エントリーポイント (app.ts)
+```typescript
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+
+import { Bindings, Variables } from './context/bindings';
+import { withRequestId } from './context/helpers';
+import { errorHandler } from './middleware/error-handler';
+import { registerRoutes } from './routes';
+
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+
+// ミドルウェアの設定
+app.use(logger());
+app.use(cors());
+app.use('*', errorHandler());
+app.use('*', async (c, next) => withRequestId(c, next));
+
+// ルートの登録
+registerRoutes(app);
+
+export default app;
+```
+
+### コンテキスト定義
+- **Bindings**: Cloudflare Workersバインディング
+- **Variables**: リクエスト変数
+- **RequestId**: リクエスト追跡用ID
+
+## 🗄️ データベース層
+
+### Drizzle ORM設定
+- SQLite互換のCloudflare D1を使用
+- テーブル定義は型安全に実装
+- マイグレーション管理
+
+### リポジトリパターン
+```typescript
+export class MedicationRepository {
+  async create(data: CreateMedicationLogData) {
+    return await db.insert(medicationLogs).values(data).returning();
+  }
+
+  async findById(id: string) {
+    return await db.select().from(medicationLogs).where(eq(medicationLogs.id, id));
+  }
+
+  async findByMedicationId(medicationId: string, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    return await db
+      .select()
+      .from(medicationLogs)
+      .where(eq(medicationLogs.medicationId, medicationId))
+      .limit(limit)
+      .offset(offset);
+  }
+}
+```
+
+## 🛣️ ルーティング
+
+### ルート登録
+```typescript
+export const registerRoutes = (app: App) => {
+  app.route('/api/health', healthRoutes);
+  app.route('/api/medication-log', medicationRoutes);
+  app.route('/api/notification', notificationRoutes);
+};
+```
+
+### 機能別ルーター
+- 各機能ごとにルーターを分離
+- RESTfulな設計に従う
+- HTTPメソッドを適切に使用
+
+## 🎯 ハンドラー
+
+### ハンドラーの基本構造
+```typescript
+export const createHandler = async (c: Context) => {
+  try {
+    const body = await c.req.json();
+    const validatedData = createMedicationLogSchema.parse(body);
+
+    const repository = new MedicationRepository();
+    const result = await repository.create(validatedData);
+
+    return c.json({
+      success: true,
+      data: result[0],
+      message: '薬のログを作成しました',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    return c.json({
+      success: false,
+      message: '薬のログの作成に失敗しました',
+      errorCode: 'CREATE_FAILED',
+      timestamp: new Date().toISOString(),
+    }, 500);
+  }
+};
+```
+
+### バリデーション
+- Zodスキーマを使用
+- 型安全なバリデーション
+- エラーメッセージの日本語化
+
+## 🛡️ ミドルウェア
+
+### エラーハンドラー
+- グローバルエラーハンドリング
+- ログ出力
+- 適切なエラーレスポンス
+
+### 認証ミドルウェア（将来実装予定）
+- JWTトークンの検証
+- 認証エラーの処理
+- ユーザー情報の設定
+
+## 🧪 テスト
+
+### テストの実行
+```bash
+# 全テスト実行
+bun test
+
+# カバレッジ付きテスト
+bun test --coverage
+
+# 特定のテストファイル実行
+bun test auth.test.ts
+```
+
+### テスト例
+- ユーティリティ関数のテスト
+- リポジトリのテスト
+- ハンドラーのテスト
+
+## 🔧 開発ツール
+
+### 利用可能なスクリプト
+```bash
+# 開発サーバー起動
+bun run dev
+
+# 型チェック
+bun run typecheck
+
+# リント実行
+bun run lint
+
+# テスト実行
+bun run test
+
+# カバレッジ付きテスト
+bun run test:coverage
+```
+
+### Biome設定
+- リントとフォーマットの統一
+- TypeScriptの最適化
+- コード品質の向上
+
+## 🚀 デプロイメント
+
+### Cloudflare Workers設定
+- wrangler.tomlの設定
+- 環境変数の管理
+- データベースバインディング
+
+### デプロイコマンド
+```bash
+# 開発環境デプロイ
+wrangler deploy
+
+# 本番環境デプロイ
+wrangler deploy --env production
+```
+
+## 📊 パフォーマンス
+
+### 最適化のポイント
+1. **データベースクエリの最適化**
+   - 適切なインデックスの設定
+   - N+1問題の回避
+   - クエリの最適化
+
+2. **キャッシュ戦略**
+   - Cloudflare Workersのキャッシュ機能活用
+   - データベースクエリ結果のキャッシュ
+
+3. **レスポンスサイズの最適化**
+   - 必要なフィールドのみ返却
+   - 圧縮の活用
+
+## 🔒 セキュリティ
+
+### セキュリティ対策
+1. **入力値のバリデーション**
+   - Zodによる型安全なバリデーション
+   - SQLインジェクション対策（Drizzle ORM）
+
+2. **CORS設定**
+   - 適切なオリジン設定
+   - プリフライトリクエストの処理
+
+3. **エラーハンドリング**
+   - 機密情報の漏洩防止
+   - 適切なエラーメッセージ
+
+## 🔧 開発ガイドライン
+
+### ハンドラー作成
+1. バリデーションスキーマを定義
+2. リポジトリを使用してデータアクセス
+3. 適切なレスポンス形式で返却
+4. エラーハンドリングを実装
+
+### リポジトリ作成
+1. インターフェースを定義
+2. CRUD操作を実装
+3. ページネーション対応
+4. エラーハンドリング
+
+### ミドルウェア作成
+1. 単一責任の原則に従う
+2. 適切なエラーハンドリング
+3. ログ出力の実装
+4. パフォーマンスを考慮
+
+## 🔗 関連ドキュメント
+
+詳細なバックエンド開発については `docs/backend.md` を参照してください。

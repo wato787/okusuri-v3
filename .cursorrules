@@ -1,0 +1,83 @@
+# お薬管理アプリ - Cursor プロジェクトルール
+
+このプロジェクトは、お薬管理アプリの開発に関する包括的なルールセットです。
+
+## 📚 ドキュメント参照
+
+このプロジェクトの詳細なドキュメントは `docs/` フォルダにあります：
+
+- **システム概要**: `docs/architecture.md` - 全体のアーキテクチャと設計思想
+- **コーディング規約**: `docs/coding-standards.md` - コードスタイルと規約
+- **API仕様**: `docs/api.md` - REST APIの詳細仕様
+- **フロントエンド**: `docs/frontend.md` - React + Vite開発ガイド
+- **バックエンド**: `docs/backend.md` - Hono + Cloudflare Workers開発ガイド
+- **テスト戦略**: `docs/testing.md` - テストの実行方法とベストプラクティス
+- **データベース**: `docs/database.md` - データベーススキーマとテーブル設計
+- **セットアップ**: `docs/setup.md` - 開発環境の構築方法
+
+## 🏗️ プロジェクト構成
+
+### モノレポ構成
+```
+okusuri-monorepo/
+├── backend/     # API サーバー（Hono + Cloudflare Workers）
+├── frontend/    # Web アプリケーション（React + Vite）
+├── shared/      # 共通ライブラリ（型定義・ユーティリティ）
+└── docs/        # ドキュメント
+```
+
+### 技術スタック
+- **バックエンド**: Hono, Cloudflare Workers, Drizzle ORM, Zod, TypeScript
+- **フロントエンド**: React 19, Vite, Tailwind CSS, Radix UI, TypeScript
+- **共通**: Bun, Biome, Bun Test
+
+## 🎯 開発原則
+
+1. **型安全性**: TypeScriptを活用した型安全な開発
+2. **パフォーマンス**: Cloudflare Workersによるエッジコンピューティング
+3. **アクセシビリティ**: Radix UIによるアクセシブルなコンポーネント
+4. **テスト**: 単体テスト、統合テスト、E2Eテストの組み合わせ
+5. **ドキュメント**: コードとドキュメントの同期
+
+## 📋 開発時の注意事項
+
+### コーディング規約
+- TypeScriptの厳密な型チェックを有効にする
+- Biomeによるリントとフォーマットを適用
+- 命名規則: camelCase（変数・関数）、PascalCase（クラス・インターフェース）
+- JSDocコメントで関数・クラスをドキュメント化
+
+### アーキテクチャ
+- 単一責任の原則に従った設計
+- 依存性注入パターンの使用
+- RESTful API設計
+- モバイルファーストのレスポンシブデザイン
+
+### テスト
+- AAAパターン（Arrange, Act, Assert）でテストを記述
+- テストの独立性を保つ
+- カバレッジ80%以上を維持
+
+## 🔧 開発ツール
+
+### 利用可能なスクリプト
+```bash
+# 開発サーバー起動
+bun run dev
+
+# テスト実行
+bun run test
+
+# 型チェック
+bun run typecheck
+
+# リント実行
+bun run lint
+
+# ビルド
+bun run build
+```
+
+## 📖 詳細情報
+
+各トピックの詳細は、対応するドキュメントファイルを参照してください。開発中に疑問が生じた場合は、まず関連するドキュメントを確認し、必要に応じて更新してください。
