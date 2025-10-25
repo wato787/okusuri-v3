@@ -1,4 +1,4 @@
-import { Calendar, Home, PieChart, Settings } from "lucide-react";
+import { Calendar, Home, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type NavItem = {
@@ -9,7 +9,6 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "ホーム", icon: Home },
   { label: "カレンダー", icon: Calendar },
-  { label: "統計", icon: PieChart },
   { label: "設定", icon: Settings },
 ];
 
